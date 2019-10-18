@@ -22,3 +22,8 @@ class Become_LeaderSerializer(serializers.Serializer):
     has_car=serializers.BooleanField()
     car_capacity=serializers.IntegerField()
     car_model=serializers.CharField()
+
+class LeaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leader
+        fields = ('nationalID','has_car','car_capacity','car_model' )
