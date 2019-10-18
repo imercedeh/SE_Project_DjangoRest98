@@ -3,7 +3,7 @@ from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import SignupSerializer,UserSerializer,Become_LeaderSerializer
+from .serializers import SignupSerializer,UserSerializer,Become_LeaderSerializer,LeaderSerializer
 from rest_framework import status
 
 class SignupAPI(APIView):
@@ -86,3 +86,16 @@ class Become_LeaderAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+class LeaderAPI(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = LeaderSerializer
+
+    def get(self, request, format=None):
+        leader=Leader.objects.get(userID=request.user)
+        serializer=self.serializer_class(leader)
+        u=user.objects.get(username=request.user)
+        content = {'username': u.username ,'email': u.email, 'first_name': u.first_name,
+                    'last_name': u.last_name,'itinerary':u.itinerary,'phone_number':u.phone_number }
+        content.update(dict(serializer.data))
+        return Response(content,status=status.HTTP_200_OK)
