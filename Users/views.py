@@ -3,7 +3,7 @@ from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import SignupSerializer
+from .serializers import SignupSerializer,UserSerializer,Become_LeaderSerializer
 from rest_framework import status
 
 class SignupAPI(APIView):
@@ -52,3 +52,37 @@ class UserAPI(APIView):
         u=user.objects.get(username=request.user.username)
         serializer=self.serializer_class(u)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+class Become_LeaderAPI(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = Become_LeaderSerializer
+        
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        u=user.objects.get(username= request.user.username)
+
+        if serializer.is_valid():
+            nationalID = serializer.data['nationalID']
+            has_car = serializer.data['has_car']
+            car_capacity = serializer.data['car_capacity']
+            car_model = serializer.data['car_model']
+
+            try:
+                u.is_leader=True
+                u.save()
+
+                leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
+                car_capacity=car_capacity,car_model=car_model)
+
+                leader.save()
+
+                content = {'username': leader.userID.username ,'nationalID':leader.nationalID,
+                    'detail':'successfuly added the leader'}
+
+                return Response(content, status=status.HTTP_201_CREATED)
+            except:
+                content = {'detail': 'Failed to add leader'}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        else:
+             return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
