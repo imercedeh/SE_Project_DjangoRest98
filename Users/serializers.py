@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from .models import user
+from .models import user,Leader
 from rest_framework import serializers
 
 class SignupSerializer(serializers.Serializer):
@@ -16,3 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
         fields = ('username', 'email', 'first_name', 'last_name', 'password','itinerary','phone_number')
+
+class Become_LeaderSerializer(serializers.Serializer):
+    nationalID=serializers.IntegerField()
+    has_car=serializers.BooleanField()
+    car_capacity=serializers.IntegerField()
+    car_model=serializers.CharField()
