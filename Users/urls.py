@@ -1,5 +1,6 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views
+from Users.views import UserAPI
 
 
 from rest_framework import routers
@@ -12,4 +13,5 @@ from rest_framework_simplejwt import views as jwt_views
 urlpatterns = [
     url(r'^token/$', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     url(r'^token/refresh/$', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^me/$', UserAPI.as_view()),
 ]
