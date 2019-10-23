@@ -1,5 +1,10 @@
-from rest_framework.serializers import ModelSerializer,Serializer
-from Places.models import Places
+from rest_framework.serializers import *
+from Places.models import Places,PlaceImage
+
+class PlaceImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceImage
+        fields = ('image',)
 
 
 class CreatePlaceSerializer(ModelSerializer):
