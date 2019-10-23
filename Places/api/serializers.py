@@ -17,7 +17,6 @@ class CreatePlaceSerializer(ModelSerializer):
         fields = [
         'id',
         'title', 
-        'user',
         'images',
         'Description',
         'Likes',
@@ -47,4 +46,5 @@ class CreatePlaceSerializer(ModelSerializer):
 
         for image_data in images_data.values():
             PlaceImage.objects.create(places=places, image=image_data)
+        
         return places
