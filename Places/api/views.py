@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework.generics import CreateAPIView
 from .serializers import CreatePlaceSerializer
-from Places.models import *
+from Places.models import Places
 
 
 class CreatePlaceAPIView(CreateAPIView):
