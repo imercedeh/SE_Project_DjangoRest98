@@ -42,7 +42,7 @@ class CreatePlaceSerializer(ModelSerializer):
         Time=validated_data.get('Time'),
         City=validated_data.get('City'),
         Average=Places.objects.all().aggregate(Avg('Likes'))
-        ,user_id=1)
+        ,)
 
         for image_data in images_data.values():
             PlaceImage.objects.create(places=places, image=image_data)
