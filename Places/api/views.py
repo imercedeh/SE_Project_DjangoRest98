@@ -21,12 +21,3 @@ class ViewPlaceAPI(generics.ListAPIView):
     serializer_class=ViewPlaceSerializer
     filter_backends= [SearchFilter, OrderingFilter]
     search_fields = ['City', 'title']
-
-    # def get_queryset(self, *args, **kwargs):
-    #     queryset_list = Places.objects.all() 
-        # user = self.request.user
-
-        # if user is not None:
-        #     return Places.objects.filter(user=user)
-        # else:
-        #     return Http404
