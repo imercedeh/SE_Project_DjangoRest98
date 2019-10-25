@@ -30,6 +30,7 @@ class CreatePlaceSerializer(ModelSerializer):
         read_only_fields = ('Average',)
 
 
+
     def create(self, validated_data):
         images_data = self.context.get('view').request.FILES
         places = Places.objects.create(
@@ -49,8 +50,7 @@ class CreatePlaceSerializer(ModelSerializer):
         
         return places
 
-
 class ViewPlaceSerializer(ModelSerializer):
     class Meta:
         model=Places
-        fields='__all__'
+        fields='__all__' 
