@@ -10,13 +10,4 @@ class CreatePlaceAPIView(CreateAPIView):
     queryset = Places.objects.all()
     serializer_class=CreatePlaceSerializer
 
-    def post(self, request, format=None):
-        Place_serializer = self.serializer_class(data=request.data)
-        if Place_serializer.is_valid():
-            Place_serializer.save()
-            return Response(Place_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(Place_serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST)
-
 
