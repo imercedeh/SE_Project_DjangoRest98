@@ -24,6 +24,8 @@ class CreatePlaceSerializer(ModelSerializer):
         'Hardness',
         'Address',
         'Time',
+        'StartTime',
+        'EndTime',
         'City',
         'Average',
         ]
@@ -41,7 +43,9 @@ class CreatePlaceSerializer(ModelSerializer):
         Hardness=validated_data.get('Hardness'),
         Address=validated_data.get('Address'),
         Time=validated_data.get('Time'),
-        City=validated_data.get('City'),
+        StartTime=validated_data.get('StartTime'),
+        EndTime=validated_data.get('EndTime'),
+        City=validated_data.get('City'), 
         Average=Places.objects.all().aggregate(Avg('Likes'))
         ,)
 
