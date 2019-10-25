@@ -4,11 +4,14 @@ from django.db import models
 
 class Places(models.Model):
     CATEGORY = (
-        ("Historical", "Historical"),
-        ("museums", "museums"),
-        ("Forests", "Forests"),
-        ("Public art","Public art"),
-        ("national parks","national parks"),
+        ("تاریخی", "تاریخی"),
+        ("موزه", "موزه"),
+        ("جنگل", "جنگل"),
+        ("کوه","کوه"),
+        ("طبیعت","طبیعت"),
+        ("پارک ملی","پارک ملی"),
+        ("هنر عمومی","هنر عمومی"),        
+        ("مذهبی","مذهبی"),
     )
     title = models.CharField(max_length=102, blank=False,default='بدون عنوان')
     Description=models.TextField(default='بدون توضیحات', blank=False)
@@ -17,6 +20,8 @@ class Places(models.Model):
     Hardness=models.CharField(max_length=102, blank=False,default='بدون درجه ی سختی')
     Address=models.CharField(max_length=102, blank=False,default='بدون آدرس ')
     Time=models.CharField(max_length=102, blank=False,default='بدون  تخمین زمان ')
+    StartTime=models.CharField(max_length=102, blank=False,default='بدون زمان شروع ')
+    EndTime=models.CharField(max_length=102, blank=False,default='بدون زمان پایان ')
     City=models.CharField(max_length=102, blank=False,default='بدون شهر')
     Average=models.CharField(max_length=102, blank=False,default='0')
     
