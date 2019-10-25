@@ -24,10 +24,13 @@ class CreatePlaceSerializer(ModelSerializer):
         'Hardness',
         'Address',
         'Time',
+        'StartTime',
+        'EndTime',
         'City',
         'Average',
         ]
         read_only_fields = ('Average',)
+
 
 
     def create(self, validated_data):
@@ -40,7 +43,9 @@ class CreatePlaceSerializer(ModelSerializer):
         Hardness=validated_data.get('Hardness'),
         Address=validated_data.get('Address'),
         Time=validated_data.get('Time'),
-        City=validated_data.get('City'),
+        StartTime=validated_data.get('StartTime'),
+        EndTime=validated_data.get('EndTime'),
+        City=validated_data.get('City'), 
         Average=Places.objects.all().aggregate(Avg('Likes'))
         ,)
 
@@ -48,3 +53,8 @@ class CreatePlaceSerializer(ModelSerializer):
             PlaceImage.objects.create(places=places, image=image_data)
         
         return places
+
+class ViewPlaceSerializer(ModelSerializer):
+    class Meta:
+        model=Places
+        fields='__all__' 
