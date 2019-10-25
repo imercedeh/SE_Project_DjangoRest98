@@ -10,7 +10,7 @@ class PlaceImageSerializer(serializers.ModelSerializer):
 
 
 class CreatePlaceSerializer(ModelSerializer):
-    images = PlaceImageSerializer(source='taskimage_set', many=True)
+    images = PlaceImageSerializer(source='placeimage_set', many=True, read_only=True)
     Average1=Places.objects.all().aggregate(Avg('Likes'))
     class Meta:
         model=Places
@@ -31,7 +31,7 @@ class CreatePlaceSerializer(ModelSerializer):
 
 
     def create(self, validated_data):
-        images_data = self.context.get('image').request.FILES
+        images_data = self.context.get('view').request.FILES
         places = Places.objects.create(
         title=validated_data.get('title', 'no-title'),
         Description=validated_data.get('Description'),
