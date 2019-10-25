@@ -48,3 +48,9 @@ class CreatePlaceSerializer(ModelSerializer):
             PlaceImage.objects.create(places=places, image=image_data)
         
         return places
+
+
+class ViewPlaceSerializer(ModelSerializer):
+    class Meta:
+        model=Places
+        fields='__all__'
