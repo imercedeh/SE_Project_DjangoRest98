@@ -4,11 +4,14 @@ from django.db import models
 
 class Places(models.Model):
     CATEGORY = (
-        ("Historical", "Historical"),
-        ("museums", "museums"),
-        ("Forests", "Forests"),
-        ("Public art","Public art"),
-        ("national parks","national parks"),
+        ("تاریخی", "تاریخی"),
+        ("موزه", "موزه"),
+        ("جنگل", "جنگل"),
+        ("کوه","کوه"),
+        ("طبیعت","طبیعت"),
+        ("پارک ملی","پارک ملی"),
+        ("هنر عمومی","هنر عمومی"),        
+        ("مذهبی","مذهبی"),
     )
     title = models.CharField(max_length=102, blank=False,default='بدون عنوان')
     Description=models.TextField(default='بدون توضیحات', blank=False)
