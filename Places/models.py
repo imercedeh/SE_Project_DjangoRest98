@@ -27,5 +27,5 @@ class Places(models.Model):
         return self.title
 
 class PlaceImage(models.Model): 
-    places = models.ManyToManyField(Places)
+    places = models.ForeignKey(Places, on_delete=models.CASCADE)
     image = models.FileField(blank=True)
