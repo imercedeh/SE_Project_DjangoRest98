@@ -17,6 +17,8 @@ class Places(models.Model):
     Hardness=models.CharField(max_length=102, blank=False,default='بدون درجه ی سختی')
     Address=models.CharField(max_length=102, blank=False,default='بدون آدرس ')
     Time=models.CharField(max_length=102, blank=False,default='بدون  تخمین زمان ')
+    StartTime=models.CharField(max_length=102, blank=False,default='بدون زمان شروع ')
+    EndTime=models.CharField(max_length=102, blank=False,default='بدون زمان پایان ')
     City=models.CharField(max_length=102, blank=False,default='بدون شهر')
     Average=models.CharField(max_length=102, blank=False,default='0')
     
