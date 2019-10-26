@@ -10,3 +10,5 @@ class CreatePlaceAPIView(CreateAPIView):
     queryset = Places.objects.all()
     serializer_class=CreatePlaceSerializer
     serializer_class1=PlaceImageSerializer
+
+
