@@ -10,8 +10,8 @@ class PlaceImageSerializer(serializers.ModelSerializer):
 
 
 class CreatePlaceSerializer(ModelSerializer):
-    images = PlaceImageSerializer(source='placeimage_set', many=True, read_only=True)
-    Average1=Places.objects.all().aggregate(Avg('Likes'))
+    images = PlaceImageSerializer(source='placeimage_set', many=True)
+   # Average1=Places.objects.all().aggregate(Avg('Likes'))
     class Meta:
         model=Places
         fields = [
