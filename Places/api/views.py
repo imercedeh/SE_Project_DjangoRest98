@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework.generics import CreateAPIView
 from Places.models import Places
-from .serializers import CreatePlaceSerializer,ViewPlaceSerializer
+from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,PlaceImageSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
@@ -19,6 +19,7 @@ class CreatePlaceAPIView(CreateAPIView):
 class ViewPlaceAPI(generics.ListAPIView):
     queryset = Places.objects.all()
     serializer_class=ViewPlaceSerializer
+    serializer_class1=PlaceImageSerializer
     filter_backends= [SearchFilter, OrderingFilter]
     search_fields = ['City', 'title']
 
