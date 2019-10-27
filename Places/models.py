@@ -24,6 +24,9 @@ class Places(models.Model):
     EndTime=models.CharField(max_length=102, blank=False,default='بدون زمان پایان ')
     City=models.CharField(max_length=102, blank=False,default='بدون شهر')
     Average=models.CharField(max_length=102, blank=False,default='0')
+    image1=models.ImageField(upload_to=u'C:\SE_Project_DjangoRest98\media',blank=True)
+    image2=models.ImageField(upload_to=u'C:\SE_Project_DjangoRest98\media',blank=True)
+    image3=models.ImageField(upload_to=u'C:\SE_Project_DjangoRest98\media',blank=True)
     
     def __unicode__(self):
         return self.title
@@ -31,6 +34,3 @@ class Places(models.Model):
     def __str__(self):
         return self.title
 
-class PlaceImage(models.Model): 
-    places = models.ForeignKey(Places, on_delete=models.CASCADE)
-    image = models.FileField(blank=True)

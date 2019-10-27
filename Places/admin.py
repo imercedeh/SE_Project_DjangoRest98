@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Places.models import Places,PlaceImage
+from Places.models import Places
 # Register your models here.
 
 class PlaceModelAdmin(admin.ModelAdmin):
@@ -8,4 +8,3 @@ class PlaceModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Places, PlaceModelAdmin)
-admin.site.register(PlaceImage) 
