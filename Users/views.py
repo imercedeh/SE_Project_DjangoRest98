@@ -60,6 +60,10 @@ class Become_LeaderAPI(APIView):
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         u=user.objects.get(username= request.user.username)
+        if(u.is_leader):
+            content = {'detail':
+                        ('Leader with this information already exists.')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         if serializer.is_valid():
             nationalID = serializer.data['nationalID']
