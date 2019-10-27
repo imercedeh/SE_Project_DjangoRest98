@@ -1,17 +1,10 @@
 from rest_framework.serializers import *
-from Places.models import Places,PlaceImage
+from Places.models import Places
 from rest_framework import serializers
 from django.db.models import Avg
 
-class PlaceImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PlaceImage
-        fields = ('image',)
-
-
 class CreatePlaceSerializer(ModelSerializer):
     images = PlaceImageSerializer(source='placeimage_set', many=True)
-   # Average1=Places.objects.all().aggregate(Avg('Likes'))
     class Meta:
         model=Places
         fields = [
