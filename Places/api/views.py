@@ -29,7 +29,6 @@ class ViewPlaceAPI(generics.ListAPIView):
 class UniquePlaceAPI(generics.ListAPIView):
     queryset=Places.objects.all()
     serializer_class=ViewPlaceSerializer
-    serializer_class1=PlaceImageSerializer
     filter_backends= [SearchFilter]
     search_fields = ['id']
     
