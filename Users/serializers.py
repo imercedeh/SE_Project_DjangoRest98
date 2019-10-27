@@ -20,8 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
 class Become_LeaderSerializer(serializers.Serializer):
     nationalID=serializers.IntegerField()
     has_car=serializers.BooleanField()
-    car_capacity=serializers.IntegerField()
-    car_model=serializers.CharField()
+    car_capacity=serializers.IntegerField(allow_blank=True)
+    car_model=serializers.CharField(allow_blank=True)
 
 class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
