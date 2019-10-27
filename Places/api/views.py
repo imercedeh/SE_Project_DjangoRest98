@@ -24,3 +24,17 @@ class ViewPlaceAPI(generics.ListAPIView):
     serializer_class=ViewPlaceSerializer
     filter_backends= [SearchFilter, OrderingFilter]
     search_fields = ['City', 'title']
+
+
+class UniquePlaceAPI(generics.ListAPIView):
+    queryset=Places.objects.all()
+    serializer_class=ViewPlaceSerializer
+    filter_backends= [SearchFilter]
+    search_fields = ['id']
+    
+    def get_queryset(self):
+        queryset = Places.objects.all()
+        id = self.request.query_params.get('search')
+        if id is not None:
+             queryset = queryset.filter(id__exact=id).distinct()
+        return queryset
