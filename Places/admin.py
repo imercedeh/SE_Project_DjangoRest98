@@ -8,4 +8,3 @@ class PlaceModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Places, PlaceModelAdmin)
-admin.site.register(PlaceImage) 
