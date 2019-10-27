@@ -4,10 +4,11 @@ from .serializers import CreatePlaceSerializer
 from Places.models import Places
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class CreatePlaceAPIView(CreateAPIView):
     queryset = Places.objects.all()
     serializer_class=CreatePlaceSerializer
-    serializer_class1=PlaceImageSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
 
