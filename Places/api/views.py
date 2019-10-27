@@ -34,7 +34,7 @@ class UniquePlaceAPI(generics.ListAPIView):
     
     def get_queryset(self):
         queryset = Places.objects.all()
-        id = self.request.query_params.get('id', None)
+        id = self.request.query_params.get('search')
         if id is not None:
-            queryset = queryset.filter(Places__id=id)
+             queryset = queryset.filter(id__exact=id).distinct()
         return queryset
