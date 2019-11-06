@@ -10,6 +10,7 @@ class CreatePlaceSerializer(ModelSerializer):
         model=Places
         fields = [
         'id',
+        'leader',
         'title', 
         'image1',
         'image2',
