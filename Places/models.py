@@ -1,5 +1,5 @@
 from django.db import models
-
+from Users.models import user,Leader
 # Create your models here.
 
 class Places(models.Model):
