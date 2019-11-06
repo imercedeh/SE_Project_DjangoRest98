@@ -13,6 +13,7 @@ class Places(models.Model):
         ("هنر عمومی","هنر عمومی"),        
         ("مذهبی","مذهبی"),
     )
+    leader=models.ManyToManyField(Leader)
     title = models.CharField(max_length=102, blank=False,default='بدون عنوان')
     Description=models.TextField(default='بدون توضیحات', blank=False)
     Likes = models.CharField(max_length=1, blank=False, null=True,default='0')
