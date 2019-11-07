@@ -8,7 +8,7 @@ class user(User):
 
 class Leader(models.Model):
     userID=models.OneToOneField(user,on_delete=models.CASCADE)
-    nationalID=models.IntegerField()
+    nationalID=models.CharField(max_length=12)
     has_car=models.BooleanField(default=False)
-    car_capacity=models.IntegerField()
+    car_capacity=models.CharField(max_length=5)
     car_model=models.CharField(max_length=20)
