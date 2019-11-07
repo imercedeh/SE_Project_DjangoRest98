@@ -5,6 +5,7 @@ class user(User):
     itinerary=models.CharField(max_length=500)
     is_leader=models.BooleanField(default=False)
     phone_number=models.CharField(max_length=13)
+    avatar =models.ImageField(default='/profile/profile.jpg',upload_to='profile')
 
 class Leader(models.Model):
     userID=models.OneToOneField(user,on_delete=models.CASCADE)
