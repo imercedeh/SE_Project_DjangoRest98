@@ -3,7 +3,7 @@ from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import SignupSerializer,UserSerializer,Become_LeaderSerializer,LeaderSerializer
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
 
 class SignupAPI(APIView):
@@ -53,9 +53,9 @@ class UserAPI(APIView):
         serializer=self.serializer_class(u)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-class Become_LeaderAPI(APIView):
+class LeaderCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
-    serializer_class = Become_LeaderSerializer
+    serializer_class =LeaderCreationSerializer
         
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
@@ -73,7 +73,6 @@ class Become_LeaderAPI(APIView):
             try:
                 u.is_leader=True
                 u.save()
-                print(car_capacity)
                 leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
                 car_capacity=car_capacity,car_model=car_model)
                 leader.save()
