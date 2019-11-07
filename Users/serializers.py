@@ -18,10 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'first_name', 'last_name', 'password','itinerary','phone_number')
 
 class Become_LeaderSerializer(serializers.Serializer):
-    nationalID=serializers.IntegerField()
+    nationalID=serializers.CharField()
     has_car=serializers.BooleanField()
-    car_capacity=serializers.IntegerField()
-    car_model=serializers.CharField()
+    car_capacity=serializers.CharField(allow_blank=True)
+    car_model=serializers.CharField(allow_blank=True)
 
 class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
