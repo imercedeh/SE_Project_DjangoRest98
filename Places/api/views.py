@@ -38,3 +38,8 @@ class UniquePlaceAPI(generics.ListAPIView):
         if id is not None:
              queryset = queryset.filter(id__exact=id).distinct()
         return queryset
+
+
+class RandomPlaces(generics.ListAPIView):
+    queryset = Places.objects.all().order_by('?')[:3]
+    serializer_class = HomePlaces
