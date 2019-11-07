@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = user
         fields = ('username', 'email', 'first_name', 'last_name', 'password','itinerary','phone_number')
 
-class Become_LeaderSerializer(serializers.Serializer):
+class LeaderCreationSerializer(serializers.Serializer):
     nationalID=serializers.CharField()
     has_car=serializers.BooleanField()
     car_capacity=serializers.CharField(allow_blank=True)
