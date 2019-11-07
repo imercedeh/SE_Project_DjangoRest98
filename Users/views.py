@@ -55,8 +55,7 @@ class ProfileAPI(APIView):
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)
-            content = {'username': u.username ,'email': u.email, 'first_name': u.first_name,
-                    'last_name': u.last_name,'itinerary':u.itinerary,'phone_number':u.phone_number }
+            content=dict(serializer1.data)
             content.update(dict(serializer2.data))
             return Response(content,status=status.HTTP_200_OK)
         else:
