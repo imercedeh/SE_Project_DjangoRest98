@@ -44,14 +44,24 @@ class SignupAPI(APIView):
 from .serializers import UserSerializer
 from rest_framework import status
 
-class UserAPI(APIView):
+class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = UserSerializer
+    serializer_class1 = UserSerializer
+    serializer_class2 = LeaderSerializer
 
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
-        serializer=self.serializer_class(u)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        serializer1=self.serializer_class1(u)
+        if(u.is_leader):
+            leader=Leader.objects.get(userID=request.user)
+            serializer2=self.serializer_class2(leader)
+            content = {'username': u.username ,'email': u.email, 'first_name': u.first_name,
+                    'last_name': u.last_name,'itinerary':u.itinerary,'phone_number':u.phone_number }
+            content.update(dict(serializer2.data))
+            return Response(content,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer1.data,status=status.HTTP_200_OK)   
+
 
 class LeaderCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
@@ -86,16 +96,3 @@ class LeaderCreationAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
-
-class LeaderAPI(APIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = LeaderSerializer
-
-    def get(self, request, format=None):
-        leader=Leader.objects.get(userID=request.user)
-        serializer=self.serializer_class(leader)
-        u=user.objects.get(username=request.user)
-        content = {'username': u.username ,'email': u.email, 'first_name': u.first_name,
-                    'last_name': u.last_name,'itinerary':u.itinerary,'phone_number':u.phone_number }
-        content.update(dict(serializer.data))
-        return Response(content,status=status.HTTP_200_OK)
