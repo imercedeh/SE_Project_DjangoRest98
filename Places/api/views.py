@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework.generics import CreateAPIView
 from Places.models import Places
-from .serializers import CreatePlaceSerializer,ViewPlaceSerializer
+from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,HomePlaces
 from rest_framework import generics
 from django.http import Http404
 from rest_framework.filters import (
@@ -38,3 +38,8 @@ class UniquePlaceAPI(generics.ListAPIView):
         if id is not None:
              queryset = queryset.filter(id__exact=id).distinct()
         return queryset
+
+
+class RandomPlaces(generics.ListAPIView):
+    queryset = Places.objects.all().order_by('?')[:3]
+    serializer_class = HomePlaces

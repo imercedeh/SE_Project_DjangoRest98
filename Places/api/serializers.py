@@ -35,3 +35,14 @@ class ViewPlaceSerializer(ModelSerializer):
     class Meta:
         model=Places
         fields='__all__' 
+
+
+class HomePlaces(ModelSerializer):
+    class Meta:
+        model=Places
+        fields=[
+            'id',
+            'title',
+            'image1',
+            'categories'   
+        ]
