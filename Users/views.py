@@ -4,15 +4,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
 
 class SignupAPI(CreateAPIView):
     permission_classes = (AllowAny,)
     queryset = user.objects.all()
-    serializer_class=SignupSerializer
-    #parser_classes = (MultiPartParser, FormParser)
-
+    serializer_class=UserSerializer
 
 class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)

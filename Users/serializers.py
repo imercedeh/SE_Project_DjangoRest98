@@ -1,12 +1,6 @@
 from django.contrib.auth import authenticate
 from .models import user,Leader
 from rest_framework import serializers
-
-class SignupSerializer(serializers.ModelSerializer):
-     class Meta:
-        model=user
-        fields=('id','username', 'email', 'first_name', 'last_name', 'is_leader','password','itinerary','phone_number','avatar')
-
     
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
