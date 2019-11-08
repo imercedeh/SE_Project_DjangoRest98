@@ -3,55 +3,34 @@ from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
+from rest_framework import generics
+from rest_framework.generics import CreateAPIView
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
+from rest_framework.filters import SearchFilter
 
-class SignupAPI(APIView):
+class SignupAPI(CreateAPIView):
     permission_classes = (AllowAny,)
-    serializer_class = SignupSerializer
+    queryset = user.objects.all()
+    serializer_class=UserSerializer
 
-    def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            username = serializer.data['username']
-            email = serializer.data['email']
-            password = serializer.data['password']
-            first_name = serializer.data['first_name']
-            last_name = serializer.data['last_name']
-            itinerary=serializer.data['itinerary']
-            phone_number=serializer.data['phone_number']
-
-            try:
-                u = user.objects.get(username=username)
-                content = {'detail':
-                        ('User with this Username already exists.')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                u=user.objects.create_user(username=username,email=email,password=password,
-                    first_name=first_name,last_name=last_name)
-                u.itinerary=itinerary
-                u.phone_number=phone_number
-                u.save()
-
-                content = {'username': username ,'email': email, 'first_name': first_name,
-                    'last_name': last_name,'itinerary':itinerary,'phone_number':phone_number }
-
-                return Response(content, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST)
-from .serializers import UserSerializer
-from rest_framework import status
-
-class UserAPI(APIView):
+class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = UserSerializer
+    serializer_class1 = UserSerializer
+    serializer_class2 = LeaderSerializer
 
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
-        serializer=self.serializer_class(u)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        serializer1=self.serializer_class1(u)
+        if(u.is_leader):
+            leader=Leader.objects.get(userID=request.user)
+            serializer2=self.serializer_class2(leader)
+            content=dict(serializer1.data)
+            content.update(dict(serializer2.data))
+            return Response(content,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer1.data,status=status.HTTP_200_OK)   
+
 
 class LeaderCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
@@ -69,12 +48,14 @@ class LeaderCreationAPI(APIView):
             has_car = serializer.data['has_car']
             car_capacity = serializer.data['car_capacity']
             car_model = serializer.data['car_model']
+            gender=serializer.data['gender']
+            age=serializer.data['age']
 
             try:
                 u.is_leader=True
                 u.save()
                 leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
-                car_capacity=car_capacity,car_model=car_model)
+                car_capacity=car_capacity,car_model=car_model,gender=gender,age=age)
                 leader.save()
                 content = {'username': leader.userID.username ,'nationalID':leader.nationalID,
                     'detail':'successfuly added the leader'}
@@ -87,15 +68,28 @@ class LeaderCreationAPI(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class LeaderAPI(APIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = LeaderSerializer
+class SpecificLeaderAPI(generics.ListAPIView):
+    queryset=Leader.objects.all()
+    serializer_class=LeaderSerializer
+    filter_backends= [SearchFilter]
+    search_fields = ['id']
+    
+    def get_queryset(self):
+        queryset = Leader.objects.all()
+        id = self.request.query_params.get('search')
+        if id is not None:
+             queryset = queryset.filter(id__exact=id).distinct()
+        return queryset
 
-    def get(self, request, format=None):
-        leader=Leader.objects.get(userID=request.user)
-        serializer=self.serializer_class(leader)
-        u=user.objects.get(username=request.user)
-        content = {'username': u.username ,'email': u.email, 'first_name': u.first_name,
-                    'last_name': u.last_name,'itinerary':u.itinerary,'phone_number':u.phone_number }
-        content.update(dict(serializer.data))
-        return Response(content,status=status.HTTP_200_OK)
+class SpecificUserAPI(generics.ListAPIView):
+    queryset=user.objects.all()
+    serializer_class=UserSerializer
+    filter_backends= [SearchFilter]
+    search_fields = ['id']
+    
+    def get_queryset(self):
+        queryset =user.objects.all()
+        id = self.request.query_params.get('search')
+        if id is not None:
+             queryset = queryset.filter(id__exact=id).distinct()
+        return queryset
