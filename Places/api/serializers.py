@@ -1,7 +1,7 @@
 from rest_framework.serializers import *
 from Places.models import Places
 from Users.models import user,Leader
-from Users.serializers import UserSerializer,LeaderSerializer
+from Users.serializers import UserSerializer,LeaderSerializer,PlaceLeader
 from rest_framework import serializers
 from django.db.models import Avg
 
@@ -31,7 +31,7 @@ class CreatePlaceSerializer(ModelSerializer):
 
 
 class ViewPlaceSerializer(ModelSerializer):
-    leader=LeaderSerializer(read_only=True,many=True)
+    leader=PlaceLeader(read_only=True,many=True)
     class Meta:
         model=Places
         fields='__all__' 
