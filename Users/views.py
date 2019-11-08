@@ -46,12 +46,14 @@ class LeaderCreationAPI(APIView):
             has_car = serializer.data['has_car']
             car_capacity = serializer.data['car_capacity']
             car_model = serializer.data['car_model']
+            gender=serializer.data['gender']
+            age=serializer.data['age']
 
             try:
                 u.is_leader=True
                 u.save()
                 leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
-                car_capacity=car_capacity,car_model=car_model)
+                car_capacity=car_capacity,car_model=car_model,gender=gender,age=age)
                 leader.save()
                 content = {'username': leader.userID.username ,'nationalID':leader.nationalID,
                     'detail':'successfuly added the leader'}
