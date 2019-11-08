@@ -13,3 +13,5 @@ class Leader(models.Model):
     has_car=models.BooleanField(default=False)
     car_capacity=models.CharField(max_length=5)
     car_model=models.CharField(max_length=20)
+    gender=models.BooleanField(default=False)
+    age=models.CharField(max_length=3,default=None)
