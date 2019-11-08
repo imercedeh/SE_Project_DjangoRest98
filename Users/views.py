@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
+from Places.models import Places
 
 class SignupAPI(CreateAPIView):
     permission_classes = (AllowAny,)
@@ -93,3 +94,23 @@ class SpecificUserAPI(generics.ListAPIView):
         if id is not None:
              queryset = queryset.filter(id__exact=id).distinct()
         return queryset
+
+class LeadPlaceAPI(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class =LeadPlaceSerializer
+        
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            try:
+                leader=Leader.objects.get(userID=request.user)
+                place=Places.objects.get(pk=serializer.data['placeID'])
+                place.leader.add(leader)
+                content = {'detail': 'Added place successfuly'}
+                return Response(content, status=status.HTTP_201_CREATED)
+            except:
+                content = {'detail': 'Failed to add place'}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        else:
+             return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
