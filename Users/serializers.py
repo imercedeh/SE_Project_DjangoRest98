@@ -11,7 +11,7 @@ class SignupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ('id','username', 'email', 'first_name', 'last_name', 'is_leader','password','itinerary','phone_number')
+        fields = ('id','username', 'email', 'first_name', 'last_name', 'is_leader','password','itinerary','phone_number','avatar')
 
 class LeaderCreationSerializer(serializers.Serializer):
     nationalID=serializers.CharField()
