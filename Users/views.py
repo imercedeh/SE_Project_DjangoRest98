@@ -80,4 +80,16 @@ class SpecificLeaderAPI(generics.ListAPIView):
         if id is not None:
              queryset = queryset.filter(id__exact=id).distinct()
         return queryset
-        
+
+class SpecificUserAPI(generics.ListAPIView):
+    queryset=user.objects.all()
+    serializer_class=UserSerializer
+    filter_backends= [SearchFilter]
+    search_fields = ['id']
+    
+    def get_queryset(self):
+        queryset =user.objects.all()
+        id = self.request.query_params.get('search')
+        if id is not None:
+             queryset = queryset.filter(id__exact=id).distinct()
+        return queryset
