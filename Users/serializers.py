@@ -19,3 +19,11 @@ class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leader
         fields = '__all__'
+
+
+class PlaceLeader(serializers.ModelSerializer):
+    class Meta:
+        model=Leader
+        fields=[
+            'userID'
+        ]
