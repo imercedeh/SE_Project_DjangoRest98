@@ -3,9 +3,11 @@ from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
+from rest_framework.filters import SearchFilter
 
 class SignupAPI(CreateAPIView):
     permission_classes = (AllowAny,)
@@ -65,3 +67,17 @@ class LeaderCreationAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+class SpecificLeaderAPI(generics.ListAPIView):
+    queryset=Leader.objects.all()
+    serializer_class=LeaderSerializer
+    filter_backends= [SearchFilter]
+    search_fields = ['id']
+    
+    def get_queryset(self):
+        queryset = Leader.objects.all()
+        id = self.request.query_params.get('search')
+        if id is not None:
+             queryset = queryset.filter(id__exact=id).distinct()
+        return queryset
+        
