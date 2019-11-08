@@ -19,3 +19,6 @@ class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leader
         fields = '__all__'
+
+class LeadPlaceSerializer(serializers.Serializer):
+    placeID=serializers.IntegerField()
