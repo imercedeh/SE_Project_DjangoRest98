@@ -8,6 +8,7 @@ from rest_framework.filters import (
         SearchFilter,
         OrderingFilter,
 )
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -16,6 +17,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 class CreatePlaceAPIView(CreateAPIView):
     queryset = Places.objects.all()
     serializer_class=CreatePlaceSerializer
+    permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
 
 
