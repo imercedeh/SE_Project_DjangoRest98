@@ -4,15 +4,43 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 
-class SignupAPI(CreateAPIView):
+class SignupAPI(APIView):
     permission_classes = (AllowAny,)
-    queryset = user.objects.all()
-    serializer_class=UserSerializer
+    serializer_class = SignupSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            username = serializer.data['username']
+            email = serializer.data['email']
+            password = serializer.data['password']
+            first_name = serializer.data['first_name']
+            last_name = serializer.data['last_name']
+            itinerary=serializer.data['itinerary']
+            phone_number=serializer.data['phone_number']
+            try:
+                u = user.objects.get(username=username)
+                content = {'detail':
+                        ('User with this Username already exists.')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            except:
+                u=user.objects.create_user(username=username,email=email,password=password,
+                    first_name=first_name,last_name=last_name)
+                u.itinerary=itinerary
+                u.phone_number=phone_number
+                if('avatar' in request.data):
+                    u.avatar=request.data['avatar']
+                u.save()
+                content = {'detail': 'Successfully added user'}
+                return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
