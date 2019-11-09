@@ -37,7 +37,7 @@ class SignupAPI(APIView):
                     u.avatar=request.data['avatar']
                 u.save()
                 content = {'detail': 'Successfully added user'}
-                return Response(status=status.HTTP_201_CREATED)
+                return Response(content,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
