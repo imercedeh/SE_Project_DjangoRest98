@@ -13,7 +13,7 @@ class LeaderCreationSerializer(serializers.Serializer):
     car_capacity=serializers.CharField(allow_blank=True)
     car_model=serializers.CharField(allow_blank=True)
     gender=serializers.BooleanField()
-    age=serializers.CharField()
+    age=serializers.IntegerField()
 
 class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
