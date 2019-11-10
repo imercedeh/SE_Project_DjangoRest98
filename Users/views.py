@@ -60,10 +60,10 @@ class ProfileAPI(APIView):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)
             set=list(leader.places_set.all())
-            data['leader']=[]
+            data['place']=[]
             for place in set:
                 serializer3=self.serializer_class3(place)
-                data['leader'].append(serializer3.data)
+                data['place'].append(serializer3.data)
             data.update(dict(serializer2.data))
 
             return Response(data,status=status.HTTP_200_OK)
