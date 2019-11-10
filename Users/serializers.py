@@ -29,7 +29,9 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model=Places
         fields=[
-            'title'
+            'id',
+            'title',
+            'image1',
         ]
 
 class LeaderSerializer(serializers.ModelSerializer):
