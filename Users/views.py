@@ -7,12 +7,14 @@ from rest_framework import generics
 from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
-
-    def post(self, request, format=None):
+    #parser_classes = (MultiPartParser, FormParser,FileUploadParser)
+    
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
@@ -23,7 +25,7 @@ class SignupAPI(APIView):
             last_name = serializer.data['last_name']
             itinerary=serializer.data['itinerary']
             phone_number=serializer.data['phone_number']
-            avatar=serializer.data['avatar']
+            #avatar=serializer.data['avatar']
             try:
                 u = user.objects.get(username=username)
                 content = {'detail':
@@ -34,9 +36,9 @@ class SignupAPI(APIView):
                     first_name=first_name,last_name=last_name)
                 u.itinerary=itinerary
                 u.phone_number=phone_number
-                u.avatar=avatar
-                # if('avatar' in request.data):
-                #     u.avatar=request.data['avatar']
+                #u.avatar=avatar
+                if('avatar' in request.data):
+                    u.avatar=request.data['avatar']
                 u.save()
                 content = {'detail': 'Successfully added user'}
                 return Response(content,status=status.HTTP_201_CREATED)
@@ -52,15 +54,18 @@ class ProfileAPI(APIView):
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
         serializer1=self.serializer_class1(u)
-        print(u.avatar)
+        str="http://127.0.0.1:8000"
+        data=serializer1.data
+        data['avatar']=str+serializer1.data['avatar']
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)
-            content=dict(serializer1.data)
-            content.update(dict(serializer2.data))
-            return Response(content,status=status.HTTP_200_OK)
+            #content=dict(serializer1.data)
+            #content.update(dict(serializer2.data))
+            data.update(dict(serializer2.data))
+            return Response(data,status=status.HTTP_200_OK)
         else:
-            return Response(serializer1.data,status=status.HTTP_200_OK)   
+            return Response(data,status=status.HTTP_200_OK)   
 
 
 class LeaderCreationAPI(APIView):
