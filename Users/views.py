@@ -23,6 +23,7 @@ class SignupAPI(APIView):
             last_name = serializer.data['last_name']
             itinerary=serializer.data['itinerary']
             phone_number=serializer.data['phone_number']
+            avatar=serializer.data['avatar']
             try:
                 u = user.objects.get(username=username)
                 content = {'detail':
@@ -33,8 +34,9 @@ class SignupAPI(APIView):
                     first_name=first_name,last_name=last_name)
                 u.itinerary=itinerary
                 u.phone_number=phone_number
-                if('avatar' in request.data):
-                    u.avatar=request.data['avatar']
+                u.avatar=avatar
+                # if('avatar' in request.data):
+                #     u.avatar=request.data['avatar']
                 u.save()
                 content = {'detail': 'Successfully added user'}
                 return Response(content,status=status.HTTP_201_CREATED)
@@ -50,6 +52,7 @@ class ProfileAPI(APIView):
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
         serializer1=self.serializer_class1(u)
+        print(u.avatar)
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)

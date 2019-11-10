@@ -10,7 +10,7 @@ class SignupSerializer(serializers.Serializer):
     last_name = serializers.CharField(allow_blank=True)
     itinerary=serializers.CharField(max_length=500,allow_blank=True)
     phone_number=serializers.CharField(max_length=13,allow_blank=True)
-    
+    avatar=serializers.ImageField()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
