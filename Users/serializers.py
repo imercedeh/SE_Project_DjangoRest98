@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from .models import user,Leader
 from rest_framework import serializers
+from Places.models import Places
 
 class SignupSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -10,7 +11,6 @@ class SignupSerializer(serializers.Serializer):
     last_name = serializers.CharField(allow_blank=True)
     itinerary=serializers.CharField(max_length=500,allow_blank=True)
     phone_number=serializers.CharField(max_length=13,allow_blank=True)
-    #avatar=serializers.FileField()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +24,13 @@ class LeaderCreationSerializer(serializers.Serializer):
     car_model=serializers.CharField(allow_blank=True)
     gender=serializers.BooleanField()
     age=serializers.CharField()
+
+class PlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Places
+        fields=[
+            'title'
+        ]
 
 class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
