@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
@@ -12,7 +12,6 @@ from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
-    #parser_classes = (MultiPartParser, FormParser,FileUploadParser)
     
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -25,7 +24,6 @@ class SignupAPI(APIView):
             last_name = serializer.data['last_name']
             itinerary=serializer.data['itinerary']
             phone_number=serializer.data['phone_number']
-            #avatar=serializer.data['avatar']
             try:
                 u = user.objects.get(username=username)
                 content = {'detail':
@@ -36,7 +34,6 @@ class SignupAPI(APIView):
                     first_name=first_name,last_name=last_name)
                 u.itinerary=itinerary
                 u.phone_number=phone_number
-                #u.avatar=avatar
                 if('avatar' in request.data):
                     u.avatar=request.data['avatar']
                 u.save()
@@ -50,6 +47,7 @@ class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class1 = UserSerializer
     serializer_class2 = LeaderSerializer
+    serializer_class3=PlaceSerializer
 
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
@@ -57,12 +55,17 @@ class ProfileAPI(APIView):
         str="http://127.0.0.1:8000"
         data=serializer1.data
         data['avatar']=str+serializer1.data['avatar']
+        
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)
-            #content=dict(serializer1.data)
-            #content.update(dict(serializer2.data))
+            set=list(leader.places_set.all())
+            data['leader']=[]
+            for place in set:
+                serializer3=self.serializer_class3(place)
+                data['leader'].append(serializer3.data)
             data.update(dict(serializer2.data))
+
             return Response(data,status=status.HTTP_200_OK)
         else:
             return Response(data,status=status.HTTP_200_OK)   
