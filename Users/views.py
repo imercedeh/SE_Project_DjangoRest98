@@ -4,33 +4,74 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
 
-class SignupAPI(CreateAPIView):
+class SignupAPI(APIView):
     permission_classes = (AllowAny,)
-    queryset = user.objects.all()
-    serializer_class=UserSerializer
+    serializer_class = SignupSerializer
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            username = serializer.data['username']
+            email = serializer.data['email']
+            password = serializer.data['password']
+            first_name = serializer.data['first_name']
+            last_name = serializer.data['last_name']
+            itinerary=serializer.data['itinerary']
+            phone_number=serializer.data['phone_number']
+            try:
+                u = user.objects.get(username=username)
+                content = {'detail':
+                        ('User with this Username already exists.')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            except:
+                u=user.objects.create_user(username=username,email=email,password=password,
+                    first_name=first_name,last_name=last_name)
+                u.itinerary=itinerary
+                u.phone_number=phone_number
+                if('avatar' in request.data):
+                    u.avatar=request.data['avatar']
+                u.save()
+                content = {'detail': 'Successfully added user'}
+                return Response(content,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class1 = UserSerializer
     serializer_class2 = LeaderSerializer
+    serializer_class3=PlaceSerializer
 
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
         serializer1=self.serializer_class1(u)
+        str="http://127.0.0.1:8000"
+        data=serializer1.data
+        data['avatar']=str+serializer1.data['avatar']
+        
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
             serializer2=self.serializer_class2(leader)
-            content=dict(serializer1.data)
-            content.update(dict(serializer2.data))
-            return Response(content,status=status.HTTP_200_OK)
+            set=list(leader.places_set.all())
+            data['place']=[]
+            for place in set:
+                serializer3=self.serializer_class3(place)
+                data['place'].append(serializer3.data)
+            data.update(dict(serializer2.data))
+
+            return Response(data,status=status.HTTP_200_OK)
         else:
-            return Response(serializer1.data,status=status.HTTP_200_OK)   
+            return Response(data,status=status.HTTP_200_OK)   
 
 
 class LeaderCreationAPI(APIView):
