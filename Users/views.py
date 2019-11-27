@@ -6,13 +6,15 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
 from TravelLouge.models import TravelLouge
 from TravelLouge.serializers import TravellougeSerializer
+
+str="http://127.0.0.1:8000"
 
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
@@ -58,7 +60,6 @@ class ProfileAPI(APIView):
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
         serializer1=self.serializer_class1(u)
-        str="http://127.0.0.1:8000"
         data=serializer1.data
         data['avatar']=str+serializer1.data['avatar']
 
@@ -78,6 +79,7 @@ class ProfileAPI(APIView):
             serializer2=self.serializer_class2(leader)
             set=list(leader.places_set.all())
             data['place']=[]
+
             for place in set:
                 serializer3=self.serializer_class3(place)
                 data['place'].append(serializer3.data)
@@ -123,31 +125,43 @@ class LeaderCreationAPI(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class SpecificLeaderAPI(generics.ListAPIView):
-    queryset=Leader.objects.all()
-    serializer_class=LeaderSerializer
-    filter_backends= [SearchFilter]
-    search_fields = ['id']
-    
-    def get_queryset(self):
-        queryset = Leader.objects.all()
-        id = self.request.query_params.get('search')
-        if id is not None:
-             queryset = queryset.filter(id__exact=id).distinct()
-        return queryset
+class SpecificLeaderAPI(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class=SpecificSerializer
+    serializer_class2=LeaderSerializer
+    serializer_class3=UserSerializer
+
+    def get(self, request, format=None):
+        serializer=self.serializer_class(request.data)
+
+        leader=Leader.objects.get(id=serializer.data['objID'])
+        u=user.objects.get(username=leader.userID)
+
+        serializer2=self.serializer_class2(leader)
+        serializer3=self.serializer_class3(u)
+        
+        d=serializer3.data
+        d['avatar']=str+serializer3.data['avatar']
+        data=serializer2.data
+        data.update(d)
+        return Response(data,status=status.HTTP_200_OK)
+
+
 
 class SpecificUserAPI(generics.ListAPIView):
-    queryset=user.objects.all()
-    serializer_class=UserSerializer
-    filter_backends= [SearchFilter]
-    search_fields = ['id']
-    
-    def get_queryset(self):
-        queryset =user.objects.all()
-        id = self.request.query_params.get('search')
-        if id is not None:
-             queryset = queryset.filter(id__exact=id).distinct()
-        return queryset
+    permission_classes=(IsAuthenticated,)
+    serializer_class=SpecificSerializer
+    serializer_class2=UserSerializer
+
+    def get(self, request, format=None):
+        serializer=self.serializer_class(request.data)
+
+        u=user.objects.get(id=serializer.data['objID'])
+        serializer2=self.serializer_class2(u)
+        
+        data=serializer2.data
+        data['avatar']=str+serializer2.data['avatar']
+        return Response(data,status=status.HTTP_200_OK)
 
 class LeadPlaceAPI(APIView):
     permission_classes=(IsAuthenticated,)
