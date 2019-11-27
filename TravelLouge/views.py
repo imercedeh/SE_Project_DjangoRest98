@@ -4,10 +4,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import TravelLougeCreationSerializer
+from .serializers import TravelLougeCreationSerializer,TravellougeSerializer
 from rest_framework import status
 from Places.models import Places
 from Users.models import user,Leader
+from Users.serializers import LeadPlaceSerializer
 
 # Create your views here.
 class TravelLougeCreationAPI(APIView):
@@ -47,4 +48,30 @@ class TravelLougeCreationAPI(APIView):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
              return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
+
+class PlaceTravelLougesAPI(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class =LeadPlaceSerializer
+    serializer_class2=TravellougeSerializer
+    
+    def get(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        str="http://127.0.0.1:8000"
+
+        if serializer.is_valid():
+            place=Places.objects.get(id=serializer.data['placeID'])
+            set=list(place.travellouge_set.all())
+            data={}
+            data['travellouges']=[]
+            for travellouge in set:
+                serializer2=self.serializer_class2(travellouge)
+                d=serializer2.data
+                d['image1']=str+serializer2.data['image1']
+                d['image2']=str+serializer2.data['image2']
+                d['image3']=str+serializer2.data['image3']
+                data['travellouges'].append(d)
+            return Response(data,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
