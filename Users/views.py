@@ -11,6 +11,8 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
+from TravelLouge.models import TravelLouge
+from TravelLouge.serializers import TravellougeSerializer
 
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
@@ -51,6 +53,7 @@ class ProfileAPI(APIView):
     serializer_class1 = UserSerializer
     serializer_class2 = LeaderSerializer
     serializer_class3=PlaceSerializer
+    serializer_class4=TravellougeSerializer
 
     def get(self, request, format=None):
         u=user.objects.get(username=request.user.username)
@@ -58,6 +61,17 @@ class ProfileAPI(APIView):
         str="http://127.0.0.1:8000"
         data=serializer1.data
         data['avatar']=str+serializer1.data['avatar']
+
+        travellouges=TravelLouge.objects.filter(auther=u.id)
+        data['travellouges']=[]
+
+        for travellouge in travellouges:
+            serializer4=self.serializer_class4(travellouge)
+            d=serializer4.data
+            d['image1']=str+serializer4.data['image1']
+            d['image2']=str+serializer4.data['image2']
+            d['image3']=str+serializer4.data['image3']
+            data['travellouges'].append(d)
         
         if(u.is_leader):
             leader=Leader.objects.get(userID=request.user)
@@ -69,9 +83,8 @@ class ProfileAPI(APIView):
                 data['place'].append(serializer3.data)
             data.update(dict(serializer2.data))
 
-            return Response(data,status=status.HTTP_200_OK)
-        else:
-            return Response(data,status=status.HTTP_200_OK)   
+        return Response(data,status=status.HTTP_200_OK)
+   
 
 
 class LeaderCreationAPI(APIView):
