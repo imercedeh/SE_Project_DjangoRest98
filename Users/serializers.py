@@ -42,6 +42,9 @@ class LeaderSerializer(serializers.ModelSerializer):
 class LeadPlaceSerializer(serializers.Serializer):
     placeID=serializers.IntegerField()
 
+class SpecificSerializer(serializers.Serializer):
+    objID=serializers.IntegerField()
+
 class PlaceLeader(serializers.ModelSerializer):
     class Meta:
         model=Leader

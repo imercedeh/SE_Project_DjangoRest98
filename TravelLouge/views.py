@@ -8,9 +8,10 @@ from .serializers import TravelLougeCreationSerializer,TravellougeSerializer
 from rest_framework import status
 from Places.models import Places
 from Users.models import user,Leader
-from Users.serializers import LeadPlaceSerializer
+from Users.serializers import LeadPlaceSerializer,SpecificSerializer
 
 # Create your views here.
+str="http://127.0.0.1:8000"
 class TravelLougeCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =TravelLougeCreationSerializer
@@ -51,13 +52,12 @@ class TravelLougeCreationAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 class PlaceTravelLougesAPI(APIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes=(AllowAny,)
     serializer_class =LeadPlaceSerializer
     serializer_class2=TravellougeSerializer
     
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
-        str="http://127.0.0.1:8000"
 
         if serializer.is_valid():
             place=Places.objects.get(id=serializer.data['placeID'])
@@ -75,3 +75,26 @@ class PlaceTravelLougesAPI(APIView):
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+class SpecificTravellougeAPI(APIView):
+    permission_classes=(AllowAny,)
+    serializer_class=SpecificSerializer
+    serializer_class2=TravellougeSerializer
+
+    def post(self, request, format=None):
+        serializer=self.serializer_class(request.data)
+
+        travellouge=TravelLouge.objects.get(id=serializer.data['objID'])
+        serializer2=self.serializer_class2(travellouge)
+        d=serializer2.data
+        ather_name=travellouge.auther.username
+        d['image1']=str+serializer2.data['image1']
+        d['image2']=str+serializer2.data['image2']
+        d['image3']=str+serializer2.data['image3']
+        d['ather_username']=ather_name
+        d['places_titles']=[]
+        for p in d['places']:
+            __place=Places.objects.get(id=p)
+            d['places_titles'].append({'id':p,'title':__place.title})
+
+        return Response(d,status=status.HTTP_200_OK)
