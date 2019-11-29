@@ -168,3 +168,17 @@ class LeadPlaceAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+class UsersView(APIView):
+    def get(self,request,format=None,*args, **kwargs):
+        users=user.objects.all()
+        serializer=UserSerializer(users,many=True)
+        return Response({"List Of All users ":serializer.data})
+
+class UserAdvanceSearch(viewsets.ModelViewSet):
+    __basic_fields = ('id','username', 'email', 'first_name', 'last_name')
+    queryset = user.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
