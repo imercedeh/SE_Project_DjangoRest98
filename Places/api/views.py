@@ -45,3 +45,12 @@ class UniquePlaceAPI(generics.ListAPIView):
 class RandomPlaces(generics.ListAPIView):
     queryset = Places.objects.all().order_by('?')[:3]
     serializer_class = HomePlaces
+
+
+class PlaceAdvanceSearch(viewsets.ModelViewSet):
+    __basic_fields = ('id','title', 'Likes','categories','Hardness','Time','StartTime','EndTime','City')
+    queryset = Places.objects.all()
+    serializer_class = ViewPlaceSerializer
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
