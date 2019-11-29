@@ -13,6 +13,12 @@ from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
 from TravelLouge.models import TravelLouge
 from TravelLouge.serializers import TravellougeSerializer
+from django_filters import rest_framework as filters
+from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+import json
+from django.db.models import Q
 
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
