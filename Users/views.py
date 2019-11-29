@@ -131,7 +131,7 @@ class SpecificLeaderAPI(APIView):
     serializer_class2=LeaderSerializer
     serializer_class3=UserSerializer
 
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializer=self.serializer_class(request.data)
 
         leader=Leader.objects.get(id=serializer.data['objID'])
@@ -153,7 +153,7 @@ class SpecificUserAPI(generics.ListAPIView):
     serializer_class=SpecificSerializer
     serializer_class2=UserSerializer
 
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializer=self.serializer_class(request.data)
 
         u=user.objects.get(id=serializer.data['objID'])

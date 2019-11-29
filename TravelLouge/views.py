@@ -55,7 +55,7 @@ class PlaceTravelLougesAPI(APIView):
     serializer_class =LeadPlaceSerializer
     serializer_class2=TravellougeSerializer
     
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         str="http://127.0.0.1:8000"
 
@@ -81,7 +81,7 @@ class SpecificTravellougeAPI(APIView):
     serializer_class=SpecificSerializer
     serializer_class2=TravellougeSerializer
 
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializer=self.serializer_class(request.data)
 
         travellouge=TravelLouge.objects.get(id=serializer.data['objID'])
