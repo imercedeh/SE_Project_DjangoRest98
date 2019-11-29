@@ -186,3 +186,8 @@ class LeaderAdvanceSearch(viewsets.ModelViewSet):
     search_fields = __basic_fields
 
 
+class LeaderSortView(generics.ListAPIView):
+    queryset=Leader.objects.all()
+    serializer_class=LeaderSerializer
+    filter_backends= [OrderingFilter]
+    search_fields = ['id','nationalID','car_model','age','userID']
