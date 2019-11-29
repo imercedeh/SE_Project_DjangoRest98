@@ -181,13 +181,23 @@ class LeadPlaceAPI(APIView):
                 place=Places.objects.get(pk=serializer.data['placeID'])
                 place.leader.add(leader)
                 content = {'detail': 'Added place successfuly'}
-                return Response(content, status=status.HTTP_201_CREATED)
+                return Response(content, status=status.HTTP_200_OK)
             except:
                 content = {'detail': 'Failed to add place'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+class ChangeAvailabilityAPI(APIView):
+    permission_classes=(IsAuthenticated,)
+
+    def post(self, request, format=None):
+        u=user.objects.get(username=request.user.username)
+        leader=Leader.objects.get(userID=u)
+        leader.is_available=not leader.is_available
+        leader.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 class LeadersView(APIView):
@@ -224,3 +234,4 @@ class UserAdvanceSearch(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
     filter_fields = __basic_fields
     search_fields = __basic_fields
+
