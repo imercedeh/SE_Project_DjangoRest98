@@ -51,7 +51,7 @@ class TravelLougeCreationAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 class PlaceTravelLougesAPI(APIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes=(AllowAny,)
     serializer_class =LeadPlaceSerializer
     serializer_class2=TravellougeSerializer
     
@@ -77,7 +77,7 @@ class PlaceTravelLougesAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 class SpecificTravellougeAPI(APIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes=(AllowAny,)
     serializer_class=SpecificSerializer
     serializer_class2=TravellougeSerializer
 
