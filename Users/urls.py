@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views
-from Users.views import SignupAPI,LeaderCreationAPI,ProfileAPI,SpecificLeaderAPI,SpecificUserAPI,LeadPlaceAPI,LeadersView,LeaderAdvanceSearch,LeaderSortView
+from Users.views import SignupAPI,LeaderCreationAPI,ProfileAPI,SpecificLeaderAPI,SpecificUserAPI,LeadPlaceAPI,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView
+
 
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -22,4 +23,6 @@ urlpatterns = [
     url('LeadersView/',LeadersView.as_view(),name='LeadersView'),
     url('LeaderSortView/',LeaderSortView.as_view(),name='LeaderSortView'),
     url('LeaderAdvanceSearch/',LeaderAdvanceSearch.as_view({'get': 'list'}),name='LeaderAdvanceSearch'),
+    url('UserAdvanceSearch/',UserAdvanceSearch.as_view({'get': 'list'}),name='UserAdvanceSearch'),
+    url('UsersView/',UsersView.as_view(),name='UsersView'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

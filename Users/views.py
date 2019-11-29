@@ -13,6 +13,12 @@ from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
 from TravelLouge.models import TravelLouge
 from TravelLouge.serializers import TravellougeSerializer
+from django_filters import rest_framework as filters
+from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+import json
+from django.db.models import Q
 
 class SignupAPI(APIView):
     permission_classes = (AllowAny,)
@@ -191,3 +197,16 @@ class LeaderSortView(generics.ListAPIView):
     serializer_class=LeaderSerializer
     filter_backends= [OrderingFilter]
     search_fields = ['id','nationalID','car_model','age','userID']
+class UsersView(APIView):
+    def get(self,request,format=None,*args, **kwargs):
+        users=user.objects.all()
+        serializer=UserSerializer(users,many=True)
+        return Response({"List Of All users ":serializer.data})
+
+class UserAdvanceSearch(viewsets.ModelViewSet):
+    __basic_fields = ('id','username', 'email', 'first_name', 'last_name')
+    queryset = user.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
