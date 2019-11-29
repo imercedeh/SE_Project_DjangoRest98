@@ -11,6 +11,7 @@ from Users.models import user,Leader
 from Users.serializers import LeadPlaceSerializer,SpecificSerializer
 
 # Create your views here.
+str="http://127.0.0.1:8000"
 class TravelLougeCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =TravelLougeCreationSerializer
@@ -57,7 +58,6 @@ class PlaceTravelLougesAPI(APIView):
     
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
-        str="http://127.0.0.1:8000"
 
         if serializer.is_valid():
             place=Places.objects.get(id=serializer.data['placeID'])
@@ -86,7 +86,15 @@ class SpecificTravellougeAPI(APIView):
 
         travellouge=TravelLouge.objects.get(id=serializer.data['objID'])
         serializer2=self.serializer_class2(travellouge)
-        
-        #data=serializer2.data
-        #data['avatar']=str+serializer2.data['avatar']
-        return Response(serializer2.data,status=status.HTTP_200_OK)
+        d=serializer2.data
+        ather_name=travellouge.auther.username
+        d['image1']=str+serializer2.data['image1']
+        d['image2']=str+serializer2.data['image2']
+        d['image3']=str+serializer2.data['image3']
+        d['ather_username']=ather_name
+        d['places_titles']=[]
+        for p in d['places']:
+            __place=Places.objects.get(id=p)
+            d['places_titles'].append({'id':p,'title':__place.title})
+
+        return Response(d,status=status.HTTP_200_OK)
