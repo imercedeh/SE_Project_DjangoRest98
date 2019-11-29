@@ -44,6 +44,12 @@ class ViewPlaceAPI(generics.ListAPIView):
             ).distinct()
         return queryset_list
 
+class SearchView(generics.ListAPIView):
+    filter_backends = (DynamicSearchFilter,)
+    queryset = Places.objects.all()
+    serializer_class = ViewPlaceSerializer
+
+
 class UniquePlaceAPI(generics.ListAPIView):
     queryset=Places.objects.all()
     serializer_class=ViewPlaceSerializer
