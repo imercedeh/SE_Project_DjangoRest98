@@ -70,6 +70,12 @@ class PlaceTravelLougesAPI(APIView):
                 d['image1']=str+serializer2.data['image1']
                 d['image2']=str+serializer2.data['image2']
                 d['image3']=str+serializer2.data['image3']
+                ather_name=travellouge.auther.username
+                d['ather_username']=ather_name
+                d['places_titles']=[]
+                for p in d['places']:
+                    __place=Places.objects.get(id=p)
+                    d['places_titles'].append({'id':p,'title':__place.title})
                 data['travellouges'].append(d)
             return Response(data,status=status.HTTP_200_OK)
         else:
