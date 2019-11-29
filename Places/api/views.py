@@ -25,10 +25,32 @@ class CreatePlaceAPIView(CreateAPIView):
 
 
 class ViewPlaceAPI(generics.ListAPIView):
-    queryset = Places.objects.all()
     serializer_class=ViewPlaceSerializer
+    #filter_class = PlacesFilter
     filter_backends= [SearchFilter, OrderingFilter]
-    search_fields = ['City', 'title']
+    search_fields =  ['id','title', 'Likes','categories','Hardness','Time','StartTime','EndTime','City']
+
+    def get_queryset(self,*args,**kwargs):
+        queryset_list = Places.objects.all()
+        query=self.request.GET.get('q')
+        if query is not None:
+            queryset_list=queryset_list.filter(
+                Q(id__iexact=query)|
+                Q(title__iexact=query)|
+                Q(Likes__iexact=query)|
+                Q(categories__iexact=query)|
+                Q(Hardness__iexact=query)|
+                Q(Time__iexact=query)|
+                Q(StartTime__iexact=query)|
+                Q(EndTime__iexact=query)|
+                Q(City__iexact=query)
+            ).distinct()
+        return queryset_list
+
+class SearchView(generics.ListAPIView):
+    filter_backends = (DynamicSearchFilter,)
+    queryset = Places.objects.all()
+    serializer_class = ViewPlaceSerializer
 
 
 class UniquePlaceAPI(generics.ListAPIView):
