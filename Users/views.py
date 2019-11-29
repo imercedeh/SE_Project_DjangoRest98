@@ -168,3 +168,26 @@ class LeadPlaceAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class LeadersView(APIView):
+    def get(self,request,format=None,*args, **kwargs):
+        leader=user.objects.all()
+        serializer=LeaderSerializer(leader,many=True)
+        return Response({"List Of All Leaders ":serializer.data})
+
+
+class LeaderAdvanceSearch(viewsets.ModelViewSet):
+    __basic_fields = ('id','nationalID','car_model','age','userID')
+    queryset = Leader.objects.all()
+    serializer_class = LeaderSerializer
+    filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = __basic_fields
+    search_fields = __basic_fields
+
+
+class LeaderSortView(generics.ListAPIView):
+    queryset=Leader.objects.all()
+    serializer_class=LeaderSerializer
+    filter_backends= [OrderingFilter]
+    search_fields = ['id','nationalID','car_model','age','userID']
