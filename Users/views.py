@@ -168,3 +168,10 @@ class LeadPlaceAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class LeadersView(APIView):
+    def get(self,request,format=None,*args, **kwargs):
+        leader=user.objects.all()
+        serializer=LeaderSerializer(leader,many=True)
+        return Response({"List Of All Leaders ":serializer.data})
