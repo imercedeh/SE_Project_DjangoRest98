@@ -23,7 +23,6 @@ from django.db.models import Q
 str="http://127.0.0.1:8001"
 
 class SignupAPI(APIView):
-    permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
     
     def post(self, request):
