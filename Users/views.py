@@ -88,7 +88,10 @@ class ProfileAPI(APIView):
 
             for place in set:
                 serializer3=self.serializer_class3(place)
-                data['place'].append(serializer3.data)
+                d=serializer3.data
+                if(d['image1'] is not None):
+                    d['image1']=str+serializer3.data['image1']
+                data['place'].append(d)
             data.update(dict(serializer2.data))
 
         return Response(data,status=status.HTTP_200_OK)
