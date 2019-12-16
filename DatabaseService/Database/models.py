@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class users(User):
+class user(User):
     itinerary=models.CharField(max_length=500)
     is_leader=models.BooleanField(default=False)
     phone_number=models.CharField(max_length=13)
     avatar =models.ImageField(default='/profile/profile.jpg',upload_to='profile')
 
 
-class Leaders(models.Model):
-    userID=models.OneToOneField(users,on_delete=models.CASCADE)
+class Leader(models.Model):
+    userID=models.OneToOneField(user,on_delete=models.CASCADE)
     is_available=models.BooleanField(default=False)
     nationalID=models.CharField(max_length=12)
     has_car=models.BooleanField(default=False)
@@ -33,7 +33,7 @@ class Places(models.Model):
         ("هنر عمومی","هنر عمومی"),        
         ("مذهبی","مذهبی"),
     )
-    leader=models.ManyToManyField(Leaders,related_name='places_leader')
+    leader=models.ManyToManyField(Leader,related_name='places_leader')
     title = models.CharField(max_length=102, blank=False,default='بدون عنوان')
     Description=models.TextField(default='بدون توضیحات', blank=False)
     Likes = models.CharField(max_length=1, blank=False, null=True,default='0')
@@ -58,11 +58,11 @@ class Places(models.Model):
 
 
 class TravelLouges(models.Model):
-    auther=models.ForeignKey(users,on_delete=models.CASCADE,related_name='travellouge_author')
+    auther=models.ForeignKey(user,on_delete=models.CASCADE)
     title = models.CharField(max_length=102)
     description=models.CharField(max_length=1000)
     image1=models.ImageField(upload_to='image/%Y/%m/%d/',default='travellouge/defualt.jpg')
     image2=models.ImageField(upload_to='image/%Y/%m/%d/',default='travellouge/defualt.jpg')
     image3=models.ImageField(upload_to='image/%Y/%m/%d/',default='travellouge/defualt.jpg')
-    place=models.ManyToManyField(Places,related_name='visitedplaces_travellogue')  
+    places=models.ManyToManyField(Places)  
 
