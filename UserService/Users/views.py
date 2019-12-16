@@ -19,7 +19,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 import json
 from django.db.models import Q
-from UserService.Global_variables import DatabaseServiceURL
+from UserService.Global_variables import DatabaseServiceURL,UserServiceURL
 import requests
 
 class Signup(APIView):
@@ -28,8 +28,14 @@ class Signup(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            response=requests.post(url=DatabaseServiceURL+"User/sign-up/",data=serializer.data)
-            return Response(data=response.json())
+            response=requests.get(url=DatabaseServiceURL+"User/GetUser/",data=request.data)
+           
+            if response.status_code==200:
+                content={'detail':'User with this username already exists!'}
+                return Response(data=content,status=status.HTTP_400_BAD_REQUEST)
+            else:
+                response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=serializer.data)
+                return Response(response.json())
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
