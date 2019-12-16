@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
+from .serializers import SignupSerializer,LoginSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
 from rest_framework import status
@@ -28,11 +28,25 @@ class Signup(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            response=requests.post(url=DatabaseServiceURL+"/Query/User/sign-up/",data=serializer.data)
+            response=requests.post(url=DatabaseServiceURL+"User/sign-up/",data=serializer.data)
             return Response(data=response.json())
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class Login(APIView):
+    serializer_class =LoginSerializer 
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            response=requests.post(url=DatabaseServiceURL+"User/token/",data=serializer.data)
+            return Response(data=response.json())
+        else:
+            return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
