@@ -21,7 +21,7 @@ import json
 from django.db.models import Q
 from .Global_variables import URL
 
-class SignupAPI(APIView):
+class Signup(APIView):
     serializer_class = SignupSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
