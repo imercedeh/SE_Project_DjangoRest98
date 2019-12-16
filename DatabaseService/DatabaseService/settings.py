@@ -56,6 +56,19 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'DatabaseService.urls'
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+    
+}
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:8001',
