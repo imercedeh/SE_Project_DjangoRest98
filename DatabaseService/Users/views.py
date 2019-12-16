@@ -22,7 +22,6 @@ class Signup(APIView):
             u = user.objects.get(username=username)
             content = {'detail':
                         ('User with this Username already exists.')}
-            content=serializer.data
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except:
             u=user.objects.create_user(username=username,email=email,password=password,
