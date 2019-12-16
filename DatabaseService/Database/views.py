@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import users,Leaders,Places,TravelLouges
+from .models import user,Leader,Places,TravelLouge
 from rest_framework.views import APIView
 from Users.seralizers import UserSerializer,LeaderSerializer
 from Places.api.serializers import ViewPlaceSerializer
@@ -10,15 +10,15 @@ from rest_framework.response import Response
 
 class LeadersData(APIView):
     def get(self,request,format=None,*args, **kwargs):
-        leader=Leaders.objects.all()
+        leader=Leader.objects.all()
         serializer=LeaderSerializer(leader,many=True)
         return Response({"Data Of All Leaders ":serializer.data})
 
 
 class UsersData(APIView):
     def get(self,request,format=None,*args, **kwargs):
-        user=users.objects.all()
-        serializer=UserSerializer(users,many=True)
+        user=user.objects.all()
+        serializer=UserSerializer(user,many=True)
         return Response({"Data Of All users ":serializer.data})
 
 class PlacesData(APIView):
@@ -29,7 +29,7 @@ class PlacesData(APIView):
 
 class TravellougeData(APIView):
     def get(self,request,format=None,*args, **kwargs):
-        travellouge=TravelLouges.objects.all()
+        travellouge=TravelLouge.objects.all()
         serializer=TravellougeSerializer(travellouge,many=True)
         return Response({"Data Of All Travellouge ":serializer.data})
 
