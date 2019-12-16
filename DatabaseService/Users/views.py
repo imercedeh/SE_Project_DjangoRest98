@@ -1,37 +1,23 @@
 from django.shortcuts import render
 from .models import user,Leader
+from .serializers import UserSerializer,LeaderSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-import requests
+from DatabaseService.Global_variables import DatabaseServiceURL
 
-
-
-
-class Signup(APIView):
-
-    def post(self, request):
-        username = request.data['username']
-        email = request.data['email']
-        password = request.data['password']
-        first_name = request.data['first_name']
-        last_name = request.data['last_name']
-        itinerary=request.data['itinerary']
-        phone_number=request.data['phone_number']
+class GetUser(APIView):
+    def get(self,request,format=None,*args, **kwargs):
         try:
-            u = user.objects.get(username=username)
+            username=request.data['username']
+            singleuser=user.objects.get(username=username)
+            data=UserSerializer(singleuser).data
+            data['avatar']=DatabaseServiceURL+data['avatar']
+            return Response(data=data)
+        except :
             content = {'detail':
-                        ('User with this Username already exists.')}
+                        ('username does not exist in db.')}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        except:
-            u=user.objects.create_user(username=username,email=email,password=password,
-                    first_name=first_name,last_name=last_name)
-            u.itinerary=itinerary
-            u.phone_number=phone_number
-            if('avatar' in request.data):
-                u.avatar=request.data['avatar']
-            u.save()
-            content = {'detail': 'Successfully added user'}
-            return Response(content,status=status.HTTP_201_CREATED)
+
         
 
