@@ -12,6 +12,10 @@ class SignupSerializer(serializers.Serializer):
     itinerary=serializers.CharField(max_length=500,allow_blank=True)
     phone_number=serializers.CharField(max_length=13,allow_blank=True)
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password=serializers.CharField()
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
