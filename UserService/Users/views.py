@@ -19,7 +19,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 import json
 from django.db.models import Q
-from .Global_variables import URL
+from UserService.Global_variables import DatabaseServiceURL
+import requests
 
 class Signup(APIView):
     serializer_class = SignupSerializer
@@ -27,28 +28,8 @@ class Signup(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            username = serializer.data['username']
-            email = serializer.data['email']
-            password = serializer.data['password']
-            first_name = serializer.data['first_name']
-            last_name = serializer.data['last_name']
-            itinerary=serializer.data['itinerary']
-            phone_number=serializer.data['phone_number']
-            try:
-                u = user.objects.get(username=username)
-                content = {'detail':
-                        ('User with this Username already exists.')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                u=user.objects.create_user(username=username,email=email,password=password,
-                    first_name=first_name,last_name=last_name)
-                u.itinerary=itinerary
-                u.phone_number=phone_number
-                if('avatar' in request.data):
-                    u.avatar=request.data['avatar']
-                u.save()
-                content = {'detail': 'Successfully added user'}
-                return Response(content,status=status.HTTP_201_CREATED)
+            response=requests.post(url=DatabaseServiceURL+"/Query/User/sign-up/",data=serializer.data)
+            return Response(data=response.json())
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
@@ -64,7 +45,7 @@ class ProfileAPI(APIView):
         u=user.objects.get(username=request.user.username)
         serializer1=self.serializer_class1(u)
         data=serializer1.data
-        data['avatar']=URL+serializer1.data['avatar']
+        data['avatar']=UserServiceURL+serializer1.data['avatar']
 
         travellouges=TravelLouge.objects.filter(auther=u.id)
         data['travellouges']=[]
@@ -72,9 +53,9 @@ class ProfileAPI(APIView):
         for travellouge in travellouges:
             serializer4=self.serializer_class4(travellouge)
             d=serializer4.data
-            d['image1']=URL+serializer4.data['image1']
-            d['image2']=URL+serializer4.data['image2']
-            d['image3']=URL+serializer4.data['image3']
+            d['image1']=UserServiceURL+serializer4.data['image1']
+            d['image2']=UserServiceURL+serializer4.data['image2']
+            d['image3']=UserServiceURL+serializer4.data['image3']
             data['travellouges'].append(d)
         
         if(u.is_leader):
@@ -144,7 +125,7 @@ class SpecificLeaderAPI(APIView):
         serializer3=self.serializer_class3(u)
         
         d=serializer3.data
-        d['avatar']=URL+serializer3.data['avatar']
+        d['avatar']=UserServiceURL+serializer3.data['avatar']
         data=serializer2.data
         data.update(d)
         return Response(data,status=status.HTTP_200_OK)
@@ -163,7 +144,7 @@ class SpecificUserAPI(generics.ListAPIView):
         serializer2=self.serializer_class2(u)
         
         data=serializer2.data
-        data['avatar']=URL+serializer2.data['avatar']
+        data['avatar']=UserServiceURL+serializer2.data['avatar']
         return Response(data,status=status.HTTP_200_OK)
 
 class LeadPlaceAPI(APIView):
