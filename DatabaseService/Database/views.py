@@ -5,6 +5,7 @@ from Users.seralizers import UserSerializer,LeaderSerializer
 from Places.api.serializers import ViewPlaceSerializer
 from TravelLouge.serializers import TravellougeSerializer
 from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 
 
@@ -13,6 +14,20 @@ class LeadersData(APIView):
         leader=Leader.objects.all()
         serializer=LeaderSerializer(leader,many=True)
         return Response({"Data Of All Leaders ":serializer.data})
+
+class UsersUsername(APIView):
+    def get(self,request,format=None,*args, **kwargs):
+        allusers=user.objects.all()
+        datas=request.data
+        try:
+            username = datas['username']
+            singleuser=allusers.get(username=username)
+            return singleuser
+        except :
+            content = {'detail':
+                        ('username does not exist in db.')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 class UsersData(APIView):
