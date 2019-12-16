@@ -58,6 +58,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'DatabaseService.urls'
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
+    'http://localhost:8001',
+    'http://localhost:8002',
+    'http://localhost:8003',
 )
 TEMPLATES = [
     {
