@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Gate.views import Signup
 from django.conf.urls import include, url
 
 urlpatterns = [
