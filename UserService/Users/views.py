@@ -28,13 +28,18 @@ class Signup(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            response=requests.get(url=DatabaseServiceURL+"User/GetUser/",data=request.data)
-           
+            username=serializer.data['username']
+            response=requests.get(url=DatabaseServiceURL+"User/GetUser/",data={'username':username})
+
             if response.status_code==200:
                 content={'detail':'User with this username already exists!'}
                 return Response(data=content,status=status.HTTP_400_BAD_REQUEST)
+
             else:
-                response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=serializer.data)
+                files={}
+                if('avatar' in request.FILES):
+                    files={'avatar':request.FILES['avatar']}
+                response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=request.data,files=files)
                 return Response(response.json())
         else:
             return Response(serializer.errors,
