@@ -8,11 +8,15 @@ from GateWay.Global_variables import UserServiceURL
 
 class Signup(APIView):
     permission_classes = (AllowAny,)
-    def post(self, request):
+    def post(self, request,format=None):
         url=UserServiceURL+"sign-up/"
         data=request.data
-        resualt=requests.post(url=url,data=data)
-        return Response(data=resualt.json())
+        files={}
+        if('avatar' in request.data):
+            files={'avatar':request.data['avatar']}
+            print(data)
+        response=requests.post(url=url,data=request.data,files=files)
+        return Response(data=response.json())
 
 class Login(APIView):
     permission_classes = (AllowAny,)
