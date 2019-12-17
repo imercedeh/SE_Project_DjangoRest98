@@ -10,7 +10,7 @@ class GetUser(APIView):
     def get(self,request,format=None,*args, **kwargs):
         try:
             username=request.data['username']
-            singleuser=user.objects.get(username=username)
+            singleuser=user.objects.get(username=username) 
             data=UserSerializer(singleuser).data
             data['avatar']=DatabaseServiceURL+data['avatar']
             return Response(data=data,status=status.HTTP_200_OK)
@@ -21,8 +21,8 @@ class GetUser(APIView):
 
 
 class AddUser(APIView):
-    def post(self,request,format=None,*args, **kwargs):
-        print(request.data)
+    def post(self,request):
+
         username = request.data['username']
         email = request.data['email']
         password = request.data['password']
@@ -35,9 +35,9 @@ class AddUser(APIView):
                     first_name=first_name,last_name=last_name)
         u.itinerary=itinerary
         u.phone_number=phone_number
-        print(request.data)
-        if('avatar' in request.data):
-            u.avatar=request.data['avatar']
+
+        if('avatar' in request.FILES):
+            u.avatar=request.FILES['avatar']
         u.save()
         content = {'detail': 'Successfully added user'}
         return Response(content,status=status.HTTP_201_CREATED)
