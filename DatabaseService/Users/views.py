@@ -41,6 +41,29 @@ class AddUser(APIView):
         u.save()
         content = {'detail': 'Successfully added user'}
         return Response(content,status=status.HTTP_201_CREATED)
+
+
+class AddLeader(APIView):
+    def post(self,request):
+        
+        nationalID = request.data['nationalID']
+        has_car = request.data['has_car']
+        car_capacity = request.data['car_capacity']
+        car_model = request.data['car_model']
+        gender = request.data['gender']
+        age=request.data['age']
+        userID=request.data['userID']
+
+        u=user.objects.get(id=userID)
+        u.is_leader=True
+        u.save()
+
+        leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
+                car_capacity=car_capacity,car_model=car_model,gender=gender,age=age)
+        leader.save()
+
+        content = {'detail': 'Successfully added Leader'}
+        return Response(content,status=status.HTTP_201_CREATED)
  
 
         
