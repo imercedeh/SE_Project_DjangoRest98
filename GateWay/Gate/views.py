@@ -12,16 +12,30 @@ class Signup(APIView):
         url=UserServiceURL+"sign-up/"
         data=request.data
         files={}
-        if('avatar' in request.data):
-            files={'avatar':request.data['avatar']}
-            print(data)
-        response=requests.post(url=url,data=request.data,files=files)
+
+        if('avatar' in data):
+            pic=data['avatar']
+            files={pic.name:pic.file}
+            data['avatar']='True'
+            data['content_type']=pic.content_type
+            data['name']=pic.name
+            
+        response=requests.post(url=url,data=data,files=files)
         return Response(data=response.json())
 
 class Login(APIView):
     permission_classes = (AllowAny,)
     def post(self, request):
         url=UserServiceURL+"token/"
+        data=request.data
+        resualt=requests.post(url=url,data=data)
+        return Response(data=resualt.json())
+
+
+class LeaderCreation(APIView):
+    permission_classes=(IsAuthenticated,)
+    def post(self, request):
+        url=UserServiceURL+"leadercreation/"
         data=request.data
         resualt=requests.post(url=url,data=data)
         return Response(data=resualt.json())
