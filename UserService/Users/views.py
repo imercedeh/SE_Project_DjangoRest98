@@ -9,7 +9,6 @@ from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
-from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
 from Places.models import Places
 from TravelLouge.models import TravelLouge
 from TravelLouge.serializers import TravellougeSerializer
@@ -37,9 +36,18 @@ class Signup(APIView):
 
             else:
                 files={}
-                if('avatar' in request.FILES):
-                    files={'avatar':request.FILES['avatar']}
-                response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=request.data,files=files)
+                data=serializer.data
+
+                if('avatar' in request.data):
+                    name=request.data['name']
+                    contentType=request.data['content_type']
+                    avatar=request.data[name]
+                    files={name:avatar.file}
+                    data['avatar']='True'
+                    data['content_type']=contentType
+                    data['name']=name
+
+                response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=data,files=files)
                 return Response(response.json())
         else:
             return Response(serializer.errors,
@@ -98,38 +106,27 @@ class ProfileAPI(APIView):
    
 
 
-class LeaderCreationAPI(APIView):
-    permission_classes=(IsAuthenticated,)
+class LeaderCreation(APIView):
     serializer_class =LeaderCreationSerializer
         
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
-        u=user.objects.get(username= request.user.username)
-        if(u.is_leader):
-            content = {'detail': 'Leader with tihs information already exits!'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         if serializer.is_valid():
-            nationalID = serializer.data['nationalID']
-            has_car = serializer.data['has_car']
-            car_capacity = serializer.data['car_capacity']
-            car_model = serializer.data['car_model']
-            gender=serializer.data['gender']
-            age=serializer.data['age']
+            username=request.user.username
+            response=requests.get(url=DatabaseServiceURL+"User/GetUser/",data={'username':username})
+            print(response)
+            u=UserSerializer(response.json()).data
 
-            try:
-                u.is_leader=True
-                u.save()
-                leader=Leader(userID=u,nationalID=nationalID,has_car=has_car,
-                car_capacity=car_capacity,car_model=car_model,gender=gender,age=age)
-                leader.save()
-                content = {'username': leader.userID.username ,'nationalID':leader.nationalID,
-                    'detail':'successfuly added the leader'}
-
-                return Response(content, status=status.HTTP_201_CREATED)
-            except:
-                content = {'detail': 'Failed to add leader'}
+            if(u['is_leader']):
+                content = {'detail': 'Leader with this information already exits!'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                data=serializer.data
+                data['userID']=u['id']
+                response=requests.post(url=DatabaseServiceURL+"User/AddLeader/",data=data)
+                return Response(response.json())
+
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
