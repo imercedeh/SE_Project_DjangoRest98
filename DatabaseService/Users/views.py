@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from DatabaseService.Global_variables import DatabaseServiceURL
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class GetUser(APIView):
     def get(self,request,format=None,*args, **kwargs):
@@ -36,8 +37,13 @@ class AddUser(APIView):
         u.itinerary=itinerary
         u.phone_number=phone_number
 
-        if('avatar' in request.FILES):
-            u.avatar=request.FILES['avatar']
+        if('avatar' in request.data):
+            name=request.data['name']
+            contentType=request.data['content_type']
+            avatar=request.data[name]
+            avatar.content_type=contentType
+            
+            u.avatar=avatar
         u.save()
         content = {'detail': 'Successfully added user'}
         return Response(content,status=status.HTTP_201_CREATED)
