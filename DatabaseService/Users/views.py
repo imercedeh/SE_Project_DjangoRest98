@@ -42,23 +42,39 @@ class AddUser(APIView):
             contentType=request.data['content_type']
             avatar=request.data[name]
             avatar.content_type=contentType
-            
+
             u.avatar=avatar
         u.save()
         content = {'detail': 'Successfully added user'}
         return Response(content,status=status.HTTP_201_CREATED)
 
+class GetLeader(APIView):
+    def get(self,request):
+        try:
+            userID=request.user.id
+            u=user.objects.get(id=userID)
+            leader=Leader.objects.get(userID=userID)
+            data=UserSerializer(u).data 
+            leaderData=LeaderSerializer(leader).data
+            data.update(dict(leaderData))
+            data['avatar']=DatabaseServiceURL+data['avatar']
+            return Response(data=data,status=status.HTTP_200_OK)
+        except :
+            content = {'detail':
+                        ('leader does not exist in db.')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AddLeader(APIView):
+
     def post(self,request):
-        
         nationalID = request.data['nationalID']
         has_car = request.data['has_car']
         car_capacity = request.data['car_capacity']
         car_model = request.data['car_model']
         gender = request.data['gender']
         age=request.data['age']
-        userID=request.data['userID']
+        userID=request.user.id
 
         u=user.objects.get(id=userID)
         u.is_leader=True
