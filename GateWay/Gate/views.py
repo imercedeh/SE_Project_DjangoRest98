@@ -33,11 +33,14 @@ class Login(APIView):
 
 
 class LeaderCreation(APIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes = (AllowAny,)
     def post(self, request):
         url=UserServiceURL+"leadercreation/"
         data=request.data
-        resualt=requests.post(url=url,data=data)
+        headers=dict(request.headers)
+        header={}
+        header['Authorization']=headers['Authorization']
+        resualt=requests.post(url=url,headers=header,data=data)
         return Response(data=resualt.json())
 
 
