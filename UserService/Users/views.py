@@ -109,22 +109,19 @@ class ProfileAPI(APIView):
 class LeaderCreation(APIView):
     serializer_class =LeaderCreationSerializer
         
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            username=request.user.username
-            response=requests.get(url=DatabaseServiceURL+"User/GetUser/",data={'username':username})
-            print(response)
-            u=UserSerializer(response.json()).data
-
-            if(u['is_leader']):
+            headers=request.headers
+            response=requests.get(url=DatabaseServiceURL+"User/GetLeader/",headers=headers)
+            
+            if(response.status_code==200):
                 content = {'detail': 'Leader with this information already exits!'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
             else:
                 data=serializer.data
-                data['userID']=u['id']
-                response=requests.post(url=DatabaseServiceURL+"User/AddLeader/",data=data)
+                response=requests.post(url=DatabaseServiceURL+"User/AddLeader/",headers=headers,data=data)
                 return Response(response.json())
 
         else:
