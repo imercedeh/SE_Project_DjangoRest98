@@ -188,9 +188,77 @@ class UniquePlace(APIView):
         # return queryset
 
 
-class RandomPlaces(generics.ListAPIView):
-    queryset = Places.objects.all().order_by('?')[:3]
+class RandomPlaces(APIView):
+    #queryset = Places.objects.all().order_by('?')[:3]
     serializer_class = HomePlaces
+
+    def get(self,request):
+        data=Places.objects.all()
+        dic={}
+        specificdata={}
+        specificdata['Home Place']=[]
+        uniquenumbers=[]
+
+        #for third in range(0,3):
+        while(len(uniquenumbers) < 3 ):
+            # uniquecount=len(uniquenumbers)
+            # print(uniquecount)
+            # if uniquecount < 4 :#or  uniquecount == 0:
+            number=random.randint(1,len(data))
+            print(number)
+            if number not in uniquenumbers:
+                uniquenumbers.append(number)
+                # else:
+                #     break
+
+        print("---------------for balayy----")
+        print(uniquenumbers)
+
+        # for j in range(0,3):
+        #     print(j)
+        #     datacount=len(data)
+        #    # number=random.sample(range(1,datacount),1)
+        #     number=random.randint(1,datacount)
+        #     if number not in uniquenumbers and uniquenumbers.count==3:
+        #         uniquenumbers.append(number)
+        #     else:
+        #         return uniquenumbers
+
+            # # print("--------------------unique numbers------")
+            # # print(uniquenumbers)
+            # if(uniquenumbers.__contains__(number)):
+
+            # uniquenumbers.append(number)
+            # print("------------------number random---------------------------")
+            # print(number)
+            #for i in data:
+        for k in uniquenumbers:
+                    # print("--------------i------")
+                    # print(i)
+                    # print("--------------k------")
+                    # print(k)
+            placeid=data.get(id=k)
+                    # print("----------------place id------------")
+                    # print(placeid)
+            serializer1=self.serializer_class(placeid)
+
+            dic['id']=serializer1.data['id']
+            dic['title']=serializer1.data['title']
+            dic['image1']=serializer1.data['image1']
+            dic['categories']=serializer1.data['categories']
+                # print("---------------dic-----")
+                # print(dic)
+
+        # for element in dic:
+        #     if element not in specificdata:
+            specificdata['Home Place'].append(dict(dic))
+
+        # print("--------specific------------")
+        # print(specificdata)
+
+
+        return Response(specificdata,status=status.HTTP_200_OK)
+
 
 
 class PlaceAdvanceSearch(viewsets.ModelViewSet):
