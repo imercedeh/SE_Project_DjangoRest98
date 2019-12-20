@@ -3,7 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Places
-from .serializers import CreatePlaceSerializer
+from  Users.models import user,Leader
+from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,SpecificSerializer
+from Users.serializers import UserSerializer
 # import logging
 # # Create your views here.
 # logger = logging.getLogger(__name__)
@@ -53,16 +55,67 @@ class AddPlace(APIView):
         #     content = {'detail': 'Failed To Add A Place Into DataBase!!'}
         #     return Response(content,status=status.HTTP_201_CREATED)
 
-class GetPlace(APIView):
-    def get(self,request,format=None,*args, **kwargs):
-        try:
-            title=request.data['title']
-            place=Places.objects.get(title=title) 
-            # data=CreatePlaceSerializer(place).data
-            return Response(data=data,status=status.HTTP_200_OK)
-        except :
-            content = {'detail':
-                        ('place does not exist in database.')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+class GetUniquePlace(APIView):
+
+    def post(self,request,format=None,*args, **kwargs):
+        #objectid=request.objID
+        objid=request.data['objID']
+        place=Places.objects.get(id=objid)#id=serializer.data['objID'])
+        #leader=Leader.objects.get(id=place.id)
+        #leader=Places.objects.get(place.leader)
+        dataa=place.leader.all()
+        #leaders={}
+        specificdatas={}
+        specificdatas['leaders']=[]
+        dic={}
+        files={}
+        print("hi")
+        print(dataa)
+        for i in dataa:
+            u=user.objects.get(username=i.userID)
+            serializer3=UserSerializer(u)
+            #d=serializer3.data
+            #print(type(d))
+            #specificdatas['leader']=serializer3.L
+            print(i)
+            dic['id']=serializer3.data['id']
+
+            if('avatar' in request.FILES):
+                dic['avatar']=request.FILES['avatar']
+            
+            dic['username']=serializer3.data['username']
+            print(dic)
+            specificdatas['leaders'].append(dict(dic))
+            # specificdatas.update()
+
+        print("--------------------")
+        print(specificdatas)
+
+        serializer2=ViewPlaceSerializer(place)
+        #serializer3=self.serializer_class3(u)
+
+        # specificdatas={}
+        # d=serializer3.data
+        # #print(type(d))
+        # specificdatas['avatar']=url+serializer3.data['avatar']
+        # specificdatas['username']=serializer3.data['username']
+        # specificdatas.(d['avatar'])
+        # specificdatas.append(d['username'])
+        data=serializer2.data
+        data.update(specificdatas)
+
+        # content = {'detail':('Retrive desired Data form db:')}
+        #response=request.post(data=data,files=files)
+        return Response(data=data)#,status=status.HTTP_200_OK)
+        #return Response(data=data,files=files)
+        # try:
+        #     title=request.data['title']
+        #     place=Places.objects.get(title=title) 
+        #     # data=CreatePlaceSerializer(place).data
+        #     return Response(data=data,status=status.HTTP_200_OK)
+        # except :
+        #     content = {'detail':
+        #                 ('place does not exist in database.')}
+        #     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
