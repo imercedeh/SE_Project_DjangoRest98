@@ -105,54 +105,73 @@ class SearchView(generics.ListAPIView):
 class UniquePlace(APIView):
     # queryset=Places.objects.all()
     serializer_class=SpecificSerializer
-    serializer_class2=ViewPlaceSerializer
-    serializer_class3=UserSerializer
+    # serializer_class2=ViewPlaceSerializer
+    # serializer_class3=UserSerializer
+
 
     def post(self,request,format=None):
-        serializer=self.serializer_class(request.data)
-        print(serializer)
+        serializer=self.serializer_class(data=request.data)
+        # print(serializer)
 
-        place=Places.objects.get(id=serializer.data['objID'])
-        #leader=Leader.objects.get(id=place.id)
-        #leader=Places.objects.get(place.leader)
-        dataa=place.leader.all()
-        #leaders={}
-        specificdatas={}
-        specificdatas['leaders']=[]
-        dic={}
-        print("hi")
-        print(dataa)
-        for i in dataa:
-            u=user.objects.get(username=i.userID)
-            serializer3=self.serializer_class3(u)
-            #d=serializer3.data
-            #print(type(d))
-            #specificdatas['leader']=serializer3.L
-            print(i)
-            dic['id']=serializer3.data['id']
-            dic['avatar']=serializer3.data['avatar']
-            dic['username']=serializer3.data['username']
-            print(dic)
-            specificdatas['leaders'].append(dict(dic))
-            # specificdatas.update()
-
-        print("--------------------")
-        print(specificdatas)
-
-        serializer2=self.serializer_class2(place)
-        #serializer3=self.serializer_class3(u)
-
+        if serializer.is_valid():
+            objectid=serializer.data['objID']
+            response=requests.post(url=str(DatabaseServiceURL)+'Place/GetUniquePlace/',data={'objID':objectid})
+            # print("----------------response-------------------------")
+            # print(response)
+            # #print(response.json())
+            # print("-----------------conetenc------------------------")
+            # print(response.content)
+            # print("---------------text--------------------------")
+            # print(response.text)
+            # print("--------------ednc--------------------------")
+            # print(response.apparent_encoding)
+            # print("---------------dic--------------------------")
+            # print(response.__dict__)
+            # print("---------------jdon--------------------------")
+            # print(response.json(encoding=ascii))
+            return Response(response.json(encoding=ascii))
+            #data=serializer.data
+        # place=Places.objects.get(id=serializer.data['objID'])
+        # #leader=Leader.objects.get(id=place.id)
+        # #leader=Places.objects.get(place.leader)
+        # dataa=place.leader.all()
+        # #leaders={}
         # specificdatas={}
-        # d=serializer3.data
-        # #print(type(d))
-        # specificdatas['avatar']=url+serializer3.data['avatar']
-        # specificdatas['username']=serializer3.data['username']
-        # specificdatas.(d['avatar'])
-        # specificdatas.append(d['username'])
-        data=serializer2.data
-        data.update(specificdatas)#dict(specificdatas))
-        #data.update(leaders)
-        return Response(data,status=status.HTTP_200_OK)
+        # specificdatas['leaders']=[]
+        # dic={}
+        # print("hi")
+        # print(dataa)
+        # for i in dataa:
+        #     u=user.objects.get(username=i.userID)
+        #     serializer3=self.serializer_class3(u)
+        #     #d=serializer3.data
+        #     #print(type(d))
+        #     #specificdatas['leader']=serializer3.L
+        #     print(i)
+        #     dic['id']=serializer3.data['id']
+        #     dic['avatar']=serializer3.data['avatar']
+        #     dic['username']=serializer3.data['username']
+        #     print(dic)
+        #     specificdatas['leaders'].append(dict(dic))
+        #     # specificdatas.update()
+
+        # print("--------------------")
+        # print(specificdatas)
+
+        # serializer2=self.serializer_class2(place)
+        # #serializer3=self.serializer_class3(u)
+
+        # # specificdatas={}
+        # # d=serializer3.data
+        # # #print(type(d))
+        # # specificdatas['avatar']=url+serializer3.data['avatar']
+        # # specificdatas['username']=serializer3.data['username']
+        # # specificdatas.(d['avatar'])
+        # # specificdatas.append(d['username'])
+        # data=serializer2.data
+        # data.update(specificdatas)#dict(specificdatas))
+        # data.update(leaders)
+        # return Response(data,status=status.HTTP_200_OK)
 
 # class UniquePlaceAPI(generics.ListAPIView):
 
