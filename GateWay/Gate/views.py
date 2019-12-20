@@ -70,3 +70,28 @@ class CreatePlace(APIView):
         return Response(data=response.json())
 
 
+class UniquePlace(APIView):
+    def post(self,request,format=None):
+        url=str(PlaceServiceURL)+'UniquePlace/'
+        #url='http://127.0.0.1:8002/api/Place/UniquePlace/'
+        data=request.data
+        print(data)
+        files={}
+
+        if('image1' in request.data):
+            files={'image1':request.data['image1']}
+
+        if('image2' in request.data):
+            files={'image2':request.data['image2']}
+
+
+        if('image3' in request.data):
+            files={'image3':request.data['image3']}
+
+
+        if('avatar' in request.data):
+            files={'avatar':request.data['avatar']}
+        
+        response=requests.post(url=url,data=data,files=files)
+        return Response(data=response.json(encoding=ascii))
+
