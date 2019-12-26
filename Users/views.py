@@ -148,21 +148,6 @@ class LeaderCreationAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class SpecificUserAPI(generics.ListAPIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class=SpecificSerializer
-    serializer_class2=UserSerializer
-
-    def post(self, request, format=None):
-        serializer=self.serializer_class(request.data)
-
-        u=user.objects.get(id=serializer.data['objID'])
-        serializer2=self.serializer_class2(u)
-        
-        data=serializer2.data
-        data['avatar']=str+serializer2.data['avatar']
-        return Response(data,status=status.HTTP_200_OK)
-
 class LeadPlaceAPI(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =LeadPlaceSerializer
