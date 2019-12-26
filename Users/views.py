@@ -56,6 +56,7 @@ class SignupAPI(APIView):
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProfileAPI(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class1 = UserSerializer
@@ -110,7 +111,6 @@ class ProfileAPI(APIView):
         return Response(data,status=status.HTTP_200_OK)
    
 
-
 class LeaderCreationAPI(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =LeaderCreationSerializer
@@ -146,28 +146,6 @@ class LeaderCreationAPI(APIView):
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
-
-class SpecificLeaderAPI(APIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class=SpecificSerializer
-    serializer_class2=LeaderSerializer
-    serializer_class3=UserSerializer
-
-    def post(self, request, format=None):
-        serializer=self.serializer_class(request.data)
-
-        leader=Leader.objects.get(id=serializer.data['objID'])
-        u=user.objects.get(username=leader.userID)
-
-        serializer2=self.serializer_class2(leader)
-        serializer3=self.serializer_class3(u)
-        
-        d=serializer3.data
-        d['avatar']=str+serializer3.data['avatar']
-        data=serializer2.data
-        data.update(d)
-        return Response(data,status=status.HTTP_200_OK)
-
 
 
 class SpecificUserAPI(generics.ListAPIView):
