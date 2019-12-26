@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer,RateSerializer
 from rest_framework.generics import CreateAPIView
 from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer
 from rest_framework import status
@@ -214,3 +214,22 @@ class UserAdvanceSearch(viewsets.ModelViewSet):
     filter_fields = __basic_fields
     search_fields = __basic_fields
 
+class RateLeader(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class =RateSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            u=request.user
+            leaderID=serializer.data['LeaderID']
+            rateVal=serializer.data['rate']
+
+            leader=Leader.objects.get(id=leaderID)
+            rate=LeaderRate(user=u,leader=leader,rate=rateVal)
+            rate.save()
+
+        else:
+            return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
