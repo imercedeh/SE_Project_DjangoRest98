@@ -227,7 +227,13 @@ class RateLeader(APIView):
             rateVal=serializer.data['rate']
 
             leader=Leader.objects.get(id=leaderID)
-            rate=LeaderRate(user=u,leader=leader,rate=rateVal)
+            try:
+                rate=LeaderRate.objects.get(user=u,leader=leader)
+                rate.rate=rateVal
+           
+            except:
+                rate=LeaderRate(user=u,leader=leader,rate=rateVal)
+            
             rate.save()
 
             content = {'leader': leader.userID.username ,'user':u.username,'rate':rate.rate,
