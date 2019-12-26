@@ -64,7 +64,20 @@ class ProfileAPI(APIView):
     serializer_class4=TravellougeSerializer
 
     def get(self, request, format=None):
-        u=user.objects.get(username=request.user.username)
+
+        if('leaderID' in request.data  and request.data['leaderID']!=''):
+            id=int(request.data['leaderID'])
+            l=Leader.objects.get(id=id)
+            u=user.objects.get(id=l.userID.id)
+            
+
+        elif 'userID' in request.data and request.data['userID']!='' :
+            id=int(request.data['userID'])
+            u=user.objects.get(id=id)
+
+        else:
+            u=user.objects.get(username=request.user.username)
+
         serializer1=self.serializer_class1(u)
         data=serializer1.data
         data['avatar']=str+serializer1.data['avatar']
@@ -81,7 +94,7 @@ class ProfileAPI(APIView):
             data['travellouges'].append(d)
         
         if(u.is_leader):
-            leader=Leader.objects.get(userID=request.user)
+            leader=Leader.objects.get(userID=u)
             serializer2=self.serializer_class2(leader)
             set=list(leader.places_set.all())
             data['place']=[]
