@@ -64,7 +64,7 @@ class Profile(APIView):
     serializer_class3=PlaceSerializer
     serializer_class4=TravellougeSerializer
 
-    def get(self, request, format=None):
+    def post(self, request, format=None):
 
         if('leaderID' in request.data  and request.data['leaderID']!=''):
             id=int(request.data['leaderID'])
