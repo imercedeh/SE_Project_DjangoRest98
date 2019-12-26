@@ -19,6 +19,6 @@ class Leader(models.Model):
 
 
 class LeaderRate(models.Model):
-    user=models.OneToOneField(user,on_delete=models.CASCADE)
-    leader=models.OneToOneField(Leader,on_delete=models.CASCADE)
+    user=models.ForeignKey(user,on_delete=models.CASCADE)
+    leader=models.ForeignKey(Leader,on_delete=models.CASCADE)
     rate=models.IntegerField(blank=True)
