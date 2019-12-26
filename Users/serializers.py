@@ -54,3 +54,8 @@ class PlaceLeader(serializers.ModelSerializer):
         fields=[
             'userID'
         ]
+
+
+class RateSerializer(serializers.Serializer):
+    LeaderID=serializers.IntegerField()
+    rate=serializers.IntegerField()
