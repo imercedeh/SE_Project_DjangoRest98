@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
@@ -150,14 +150,14 @@ class LeaderCreationAPI(APIView):
 
 class LeadPlaceAPI(APIView):
     permission_classes=(IsAuthenticated,)
-    serializer_class =LeadPlaceSerializer
+    serializer_class =SpecificSerializer
         
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
                 leader=Leader.objects.get(userID=request.user)
-                place=Places.objects.get(pk=serializer.data['placeID'])
+                place=Places.objects.get(pk=serializer.data['objID'])
                 place.leader.add(leader)
                 content = {'detail': 'Added place successfuly'}
                 return Response(content, status=status.HTTP_200_OK)
