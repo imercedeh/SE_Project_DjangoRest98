@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views
-from Users.views import SignupAPI,LeaderCreationAPI,ProfileAPI,LeadPlaceAPI,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailabilityAPI
+from Users.views import Signup,LeaderCreation,Profile,LeadPlace,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailability
 
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -11,13 +11,13 @@ from rest_framework_simplejwt import views as jwt_views
 
 
 urlpatterns = [
-    url(r'^sign-up/$', SignupAPI.as_view()),
+    url(r'^sign-up/$', Signup.as_view()),
     url(r'^token/$', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     url(r'^token/refresh/$', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    url(r'^leadercreation/$', LeaderCreationAPI.as_view()),
-    url(r'^me/$', ProfileAPI.as_view()),
-    url(r'LeadPlace/',LeadPlaceAPI.as_view()),
-    url(r'ChangeAvailability/',ChangeAvailabilityAPI.as_view()),
+    url(r'^leadercreation/$', LeaderCreation.as_view()),
+    url(r'^me/$', Profile.as_view()),
+    url(r'LeadPlace/',LeadPlace.as_view()),
+    url(r'ChangeAvailability/',ChangeAvailability.as_view()),
     url('LeadersView/',LeadersView.as_view(),name='LeadersView'),
     url('LeaderSortView/',LeaderSortView.as_view(),name='LeaderSortView'),
     url('LeaderAdvanceSearch/',LeaderAdvanceSearch.as_view({'get': 'list'}),name='LeaderAdvanceSearch'),
