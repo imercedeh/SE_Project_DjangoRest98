@@ -22,7 +22,7 @@ from django.db.models import Q
 
 str="http://127.0.0.1:8000"
 
-class SignupAPI(APIView):
+class Signup(APIView):
     permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
     
@@ -57,7 +57,7 @@ class SignupAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProfileAPI(APIView):
+class Profile(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class1 = UserSerializer
     serializer_class2 = LeaderSerializer
@@ -111,7 +111,7 @@ class ProfileAPI(APIView):
         return Response(data,status=status.HTTP_200_OK)
    
 
-class LeaderCreationAPI(APIView):
+class LeaderCreation(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =LeaderCreationSerializer
         
@@ -148,7 +148,7 @@ class LeaderCreationAPI(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class LeadPlaceAPI(APIView):
+class LeadPlace(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =SpecificSerializer
         
@@ -168,7 +168,7 @@ class LeadPlaceAPI(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class ChangeAvailabilityAPI(APIView):
+class ChangeAvailability(APIView):
     permission_classes=(IsAuthenticated,)
 
     def post(self, request, format=None):
