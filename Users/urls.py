@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views
-from Users.views import SignupAPI,LeaderCreationAPI,ProfileAPI,SpecificLeaderAPI,SpecificUserAPI,LeadPlaceAPI,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailabilityAPI
+from Users.views import SignupAPI,LeaderCreationAPI,ProfileAPI,LeadPlaceAPI,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailabilityAPI
 
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -16,8 +16,6 @@ urlpatterns = [
     url(r'^token/refresh/$', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     url(r'^leadercreation/$', LeaderCreationAPI.as_view()),
     url(r'^me/$', ProfileAPI.as_view()),
-    url(r'SpecificLeader/',SpecificLeaderAPI.as_view()),
-    url(r'SpecificUser/',SpecificUserAPI.as_view()),
     url(r'LeadPlace/',LeadPlaceAPI.as_view()),
     url(r'ChangeAvailability/',ChangeAvailabilityAPI.as_view()),
     url('LeadersView/',LeadersView.as_view(),name='LeadersView'),
