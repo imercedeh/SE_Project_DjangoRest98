@@ -12,10 +12,12 @@ class SignupSerializer(serializers.Serializer):
     itinerary=serializers.CharField(max_length=500,allow_blank=True)
     phone_number=serializers.CharField(max_length=13,allow_blank=True)
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
         fields = ('id','username', 'email', 'first_name', 'last_name', 'is_leader','password','itinerary','phone_number','avatar')
+
 
 class LeaderCreationSerializer(serializers.Serializer):
     nationalID=serializers.CharField()
@@ -24,6 +26,7 @@ class LeaderCreationSerializer(serializers.Serializer):
     car_model=serializers.CharField(allow_blank=True)
     gender=serializers.BooleanField()
     age=serializers.CharField()
+
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,16 +37,16 @@ class PlaceSerializer(serializers.ModelSerializer):
             'image1',
         ]
 
+
 class LeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leader
         fields = '__all__'
 
-class LeadPlaceSerializer(serializers.Serializer):
-    placeID=serializers.IntegerField()
 
 class SpecificSerializer(serializers.Serializer):
     objID=serializers.IntegerField()
+
 
 class PlaceLeader(serializers.ModelSerializer):
     class Meta:
