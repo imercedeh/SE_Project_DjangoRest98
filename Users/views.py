@@ -222,13 +222,18 @@ class RateLeader(APIView):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
-            u=request.user
+            u=user.objects.get(username=request.user.username)
             leaderID=serializer.data['LeaderID']
             rateVal=serializer.data['rate']
 
             leader=Leader.objects.get(id=leaderID)
             rate=LeaderRate(user=u,leader=leader,rate=rateVal)
             rate.save()
+
+            content = {'leader': leader.userID.username ,'user':u.username,'rate':rate.rate,
+                    'detail':'successfuly rated the leader'}
+
+            return Response(content, status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,
