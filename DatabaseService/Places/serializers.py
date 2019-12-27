@@ -79,12 +79,12 @@ class ViewPlaceSerializer(ModelSerializer):
         return image
 
 
-# class HomePlaces(ModelSerializer):
-    # class Meta:
-        # model=Places
-        # fields=[
-            # 'id',
-            # 'title',
-            # 'image1',
-            # 'categories'   
-        # ]
+class HomePlaces(ModelSerializer):
+    class Meta:
+        model=Places
+        fields=[
+            'id',
+            'title',
+            'image1',
+            'categories'   
+        ]
