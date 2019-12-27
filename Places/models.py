@@ -1,5 +1,8 @@
 from django.db import models
 from Users.models import user,Leader
+from django.utils import timezone
+import datetime
+from datetime import datetime
 # Create your models here.
 
 class Places(models.Model):
@@ -34,4 +37,15 @@ class Places(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    comment=models.CharField(max_length=100, blank=False,default='بدون کامنت')
+    user=models.ForeignKey(user,on_delete=models.CASCADE,default=1)
+    #timestamp=models.DateTimeField(auto_now=True, auto_now_add=False)
+    place=models.ForeignKey(Places,on_delete=models.CASCADE,default=1)
+
+    def __str__(self):
+        return self.comment
+
 
