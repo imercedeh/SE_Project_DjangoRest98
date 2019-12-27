@@ -95,3 +95,16 @@ class UniquePlace(APIView):
         response=requests.post(url=url,data=data,files=files)
         return Response(data=response.json(encoding=ascii))
 
+
+class RandomPlace(APIView):
+    def post(self,request,format=None):
+        url=str(PlaceServiceURL)+'RandomPlace/'
+        data=request.data
+        print(data)
+        files={}
+
+        if('image1' in request.data):
+            files={'image1':request.data['image1']}
+        
+        response=requests.post(url=url,data=data,files=files)
+        return Response(data=response.json(encoding=ascii))
