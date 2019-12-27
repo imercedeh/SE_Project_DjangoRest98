@@ -108,7 +108,7 @@ class UniquePlaceAPI(APIView):
         specificdatas={}
         specificdatas['leaders']=[]
         dic={}
-        print("dataaaa")
+        print("dataaaaaa")
         print(dataa)
 
         for i in dataa:
