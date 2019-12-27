@@ -247,31 +247,6 @@ class RateLeader(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class AvgRate(APIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class =SpecificSerializer
-
-    def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            leaderID=serializer.data['objID']
-
-            queryset=LeaderRate.objects.filter(leader=leaderID)
-            rates=[]
-            for query in queryset:
-                rates.append(query.rate)
-
-            avg=sum(rates)/len(rates)
-
-            content = {'avgRate': avg }
-
-            return Response(content, status=status.HTTP_200_OK)
-
-        else:
-            return Response(serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST)
-
 def calcAvgRate(leader):
     queryset=LeaderRate.objects.filter(leader=leader)
     rates=[]
