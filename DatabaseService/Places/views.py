@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Places
 from  Users.models import user,Leader
-from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,SpecificSerializer
+from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,SpecificSerializer,HomePlaces
 from Users.serializers import UserSerializer
+import random
 # import logging
 # # Create your views here.
 # logger = logging.getLogger(__name__)
@@ -119,3 +120,27 @@ class GetUniquePlace(APIView):
         #     return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
+class GetRandomPlace(APIView):
+    def get(self,request):
+        data=Places.objects.all()
+        dic={}
+        specificdata={}
+        specificdata['Home Place']=[]
+        uniquenumbers=[]
+
+        while(len(uniquenumbers) < 3 ):
+            number=random.randint(1,len(data))
+            print(number)
+            if number not in uniquenumbers:
+                uniquenumbers.append(number)
+        for k in uniquenumbers:
+            placeid=data.get(id=k)
+            serializer1=HomePlaces(placeid)
+
+            dic['id']=serializer1.data['id']
+            dic['title']=serializer1.data['title']
+            dic['image1']=serializer1.data['image1']
+            dic['categories']=serializer1.data['categories']
+
+            specificdata['Home Place'].append(dict(dic))
+        return Response(specificdata,status=status.HTTP_200_OK)
