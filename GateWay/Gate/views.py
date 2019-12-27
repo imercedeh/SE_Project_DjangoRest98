@@ -42,12 +42,8 @@ class LeaderCreation(APIView):
         return Response(data=resualt.json())
 
 class CreatePlace(APIView):
-    #permission_classes=(IsAuthenticated,)
-
     def post(self, request,format=None):
         url=PlaceServiceURL+"CreatePlace/"
-        # with open(url) as jsonfile:
-        #     data = json.load(jsonfile)
         data=request.data
         files={}
          
@@ -73,7 +69,6 @@ class CreatePlace(APIView):
 class UniquePlace(APIView):
     def post(self,request,format=None):
         url=str(PlaceServiceURL)+'UniquePlace/'
-        #url='http://127.0.0.1:8002/api/Place/UniquePlace/'
         data=request.data
         print(data)
         files={}
