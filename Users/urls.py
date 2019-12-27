@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from rest_framework.authtoken import views
-from Users.views import Signup,LeaderCreation,Profile,LeadPlace,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailability,RateLeader,AvgRate
+from Users.views import Signup,LeaderCreation,Profile,LeadPlace,LeadersView,LeaderAdvanceSearch,LeaderSortView,UserAdvanceSearch,UsersView,ChangeAvailability,RateLeader
 
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -19,7 +19,6 @@ urlpatterns = [
     url(r'LeadPlace/',LeadPlace.as_view()),
     url(r'ChangeAvailability/',ChangeAvailability.as_view()),
     url(r'RateLeader/',RateLeader.as_view()),
-    url(r'AvgRate/',AvgRate.as_view()),
     url('LeadersView/',LeadersView.as_view(),name='LeadersView'),
     url('LeaderSortView/',LeaderSortView.as_view(),name='LeaderSortView'),
     url('LeaderAdvanceSearch/',LeaderAdvanceSearch.as_view({'get': 'list'}),name='LeaderAdvanceSearch'),
