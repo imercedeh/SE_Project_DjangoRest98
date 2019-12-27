@@ -17,8 +17,8 @@ from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
-from Users.serializers import UserSerializer
-from Users.models import user,Leader
+from Users.serializers import UserSerializer,LeaderSerializer,RateSerializer
+from Users.models import user,Leader,LeaderRate
 import random 
 
 url="http://127.0.0.1:8000"
@@ -97,6 +97,7 @@ class UniquePlaceAPI(APIView):
     serializer_class=SpecificSerializer
     serializer_class2=ViewPlaceSerializer
     serializer_class3=UserSerializer
+    serializer_class4=RateSerializer
 
     def post(self,request,format=None):
         serializer=self.serializer_class(request.data)
@@ -107,11 +108,20 @@ class UniquePlaceAPI(APIView):
         specificdatas={}
         specificdatas['leaders']=[]
         dic={}
+        print("dataaaa")
         print(dataa)
+
         for i in dataa:
             u=user.objects.get(username=i.userID)
             serializer3=self.serializer_class3(u)
-            print(i)
+            # ratedata=LeaderRate.objects.get(leader=i)
+            # serializer4=self.serializer_class4(ratedata)
+            # print("--------------ratdata")
+            # print(ratedata)
+            # print("------------serializer4")
+            # print(serializer4)
+            # print(i)
+            dic['is_available']=i.is_available
             dic['id']=serializer3.data['id']
             dic['avatar']=serializer3.data['avatar']
             dic['username']=serializer3.data['username']
