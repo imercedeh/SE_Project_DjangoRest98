@@ -13,8 +13,6 @@ class CreatePlaceSerializer(ModelSerializer):
     image1=SerializerMethodField()
     image2=SerializerMethodField()
     image3=SerializerMethodField()
-    #Likes=SerializerMethodField()
-    #Average=SerializerMethodField()
     class Meta:
         model=Places
         fields = [
@@ -57,20 +55,11 @@ class CreatePlaceSerializer(ModelSerializer):
             image = None
         return image
 
-    # def get_Average(self,obj):
-    #     likes=obj.Likes
-    #     #likes=Places.objects.get(likes=obj.Likes)
-    #     return likes/obj.id.count()
-
-
 
 class ViewPlaceSerializer(ModelSerializer):
-    #pp=uuSerializer(read_only=True)
-    #leader=PlaceLeader(read_only=True)
     image1=SerializerMethodField()
     class Meta:
         model=Places
-        #fields='__all__' 
         fields = [
         'id',
         'title', 
