@@ -106,6 +106,7 @@ class Profile(APIView):
                 if(d['image1'] is not None):
                     d['image1']=str+serializer3.data['image1']
                 data['place'].append(d)
+            data['avgRate']=calcAvgRate(leader)
             data.update(dict(serializer2.data))
 
         return Response(data,status=status.HTTP_200_OK)
@@ -270,3 +271,14 @@ class AvgRate(APIView):
         else:
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
+
+def calcAvgRate(leader):
+    queryset=LeaderRate.objects.filter(leader=leader)
+    rates=[]
+    for query in queryset:
+        rates.append(query.rate)
+    if(len(rates)!=0):
+        avg=sum(rates)/len(rates)
+        return avg
+    else:
+        return 0   
