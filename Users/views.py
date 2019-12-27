@@ -4,9 +4,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
+from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer,RateSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
@@ -22,7 +22,7 @@ from django.db.models import Q
 
 str="http://127.0.0.1:8000"
 
-class SignupAPI(APIView):
+class Signup(APIView):
     permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
     
@@ -56,15 +56,29 @@ class SignupAPI(APIView):
             return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileAPI(APIView):
+
+class Profile(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class1 = UserSerializer
     serializer_class2 = LeaderSerializer
     serializer_class3=PlaceSerializer
     serializer_class4=TravellougeSerializer
 
-    def get(self, request, format=None):
-        u=user.objects.get(username=request.user.username)
+    def post(self, request, format=None):
+
+        if('leaderID' in request.data  and request.data['leaderID']!=''):
+            id=int(request.data['leaderID'])
+            l=Leader.objects.get(id=id)
+            u=user.objects.get(id=l.userID.id)
+            
+
+        elif 'userID' in request.data and request.data['userID']!='' :
+            id=int(request.data['userID'])
+            u=user.objects.get(id=id)
+
+        else:
+            u=user.objects.get(username=request.user.username)
+
         serializer1=self.serializer_class1(u)
         data=serializer1.data
         data['avatar']=str+serializer1.data['avatar']
@@ -81,21 +95,24 @@ class ProfileAPI(APIView):
             data['travellouges'].append(d)
         
         if(u.is_leader):
-            leader=Leader.objects.get(userID=request.user)
+            leader=Leader.objects.get(userID=u)
             serializer2=self.serializer_class2(leader)
             set=list(leader.places_set.all())
             data['place']=[]
 
             for place in set:
                 serializer3=self.serializer_class3(place)
-                data['place'].append(serializer3.data)
+                d=serializer3.data
+                if(d['image1'] is not None):
+                    d['image1']=str+serializer3.data['image1']
+                data['place'].append(d)
+            data['avgRate']=calcAvgRate(leader)
             data.update(dict(serializer2.data))
 
         return Response(data,status=status.HTTP_200_OK)
    
 
-
-class LeaderCreationAPI(APIView):
+class LeaderCreation(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class =LeaderCreationSerializer
         
@@ -131,54 +148,17 @@ class LeaderCreationAPI(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class SpecificLeaderAPI(APIView):
+
+class LeadPlace(APIView):
     permission_classes=(IsAuthenticated,)
-    serializer_class=SpecificSerializer
-    serializer_class2=LeaderSerializer
-    serializer_class3=UserSerializer
-
-    def post(self, request, format=None):
-        serializer=self.serializer_class(request.data)
-
-        leader=Leader.objects.get(id=serializer.data['objID'])
-        u=user.objects.get(username=leader.userID)
-
-        serializer2=self.serializer_class2(leader)
-        serializer3=self.serializer_class3(u)
-        
-        d=serializer3.data
-        d['avatar']=str+serializer3.data['avatar']
-        data=serializer2.data
-        data.update(d)
-        return Response(data,status=status.HTTP_200_OK)
-
-
-
-class SpecificUserAPI(generics.ListAPIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class=SpecificSerializer
-    serializer_class2=UserSerializer
-
-    def post(self, request, format=None):
-        serializer=self.serializer_class(request.data)
-
-        u=user.objects.get(id=serializer.data['objID'])
-        serializer2=self.serializer_class2(u)
-        
-        data=serializer2.data
-        data['avatar']=str+serializer2.data['avatar']
-        return Response(data,status=status.HTTP_200_OK)
-
-class LeadPlaceAPI(APIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class =LeadPlaceSerializer
+    serializer_class =SpecificSerializer
         
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
                 leader=Leader.objects.get(userID=request.user)
-                place=Places.objects.get(pk=serializer.data['placeID'])
+                place=Places.objects.get(pk=serializer.data['objID'])
                 place.leader.add(leader)
                 content = {'detail': 'Added place successfuly'}
                 return Response(content, status=status.HTTP_200_OK)
@@ -189,7 +169,7 @@ class LeadPlaceAPI(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class ChangeAvailabilityAPI(APIView):
+class ChangeAvailability(APIView):
     permission_classes=(IsAuthenticated,)
 
     def post(self, request, format=None):
@@ -235,3 +215,45 @@ class UserAdvanceSearch(viewsets.ModelViewSet):
     filter_fields = __basic_fields
     search_fields = __basic_fields
 
+class RateLeader(APIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class =RateSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            u=user.objects.get(username=request.user.username)
+            leaderID=serializer.data['LeaderID']
+            rateVal=serializer.data['rate']
+
+            leader=Leader.objects.get(id=leaderID)
+            try:
+                rate=LeaderRate.objects.get(user=u,leader=leader)
+                rate.rate=rateVal
+           
+            except:
+                rate=LeaderRate(user=u,leader=leader,rate=rateVal)
+            
+            rate.save()
+
+            content = {'leader': leader.userID.username ,'user':u.username,'rate':rate.rate,
+                    'detail':'successfuly rated the leader'}
+
+            return Response(content, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST)
+
+
+def calcAvgRate(leader):
+    queryset=LeaderRate.objects.filter(leader=leader)
+    rates=[]
+    for query in queryset:
+        rates.append(query.rate)
+    if(len(rates)!=0):
+        avg=sum(rates)/len(rates)
+        return avg
+    else:
+        return 0   

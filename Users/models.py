@@ -16,3 +16,9 @@ class Leader(models.Model):
     car_model=models.CharField(max_length=20)
     gender=models.BooleanField(default=False)
     age=models.CharField(max_length=3,default=None)
+
+
+class LeaderRate(models.Model):
+    user=models.ForeignKey(user,on_delete=models.CASCADE)
+    leader=models.ForeignKey(Leader,on_delete=models.CASCADE)
+    rate=models.IntegerField(blank=True)

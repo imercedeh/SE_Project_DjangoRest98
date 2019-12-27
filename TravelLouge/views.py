@@ -8,7 +8,7 @@ from .serializers import TravelLougeCreationSerializer,TravellougeSerializer
 from rest_framework import status
 from Places.models import Places
 from Users.models import user,Leader
-from Users.serializers import LeadPlaceSerializer,SpecificSerializer
+from Users.serializers import SpecificSerializer
 
 # Create your views here.
 str="http://127.0.0.1:8000"
@@ -53,14 +53,14 @@ class TravelLougeCreationAPI(APIView):
 
 class PlaceTravelLougesAPI(APIView):
     permission_classes=(AllowAny,)
-    serializer_class =LeadPlaceSerializer
+    serializer_class =SpecificSerializer
     serializer_class2=TravellougeSerializer
     
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            place=Places.objects.get(id=serializer.data['placeID'])
+            place=Places.objects.get(id=serializer.data['objID'])
             set=list(place.travellouge_set.all())
             data={}
             data['travellouges']=[]
