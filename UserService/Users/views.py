@@ -157,15 +157,12 @@ class LeadPlace(APIView):
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-class ChangeAvailabilityAPI(APIView):
-    permission_classes=(IsAuthenticated,)
+class ChangeAvailability(APIView):
 
     def post(self, request, format=None):
-        u=user.objects.get(username=request.user.username)
-        leader=Leader.objects.get(userID=u)
-        leader.is_available=not leader.is_available
-        leader.save()
-        return Response(status=status.HTTP_200_OK)
+        headers=request.headers
+        response=requests.post(url=DatabaseServiceURL+"User/ChangeAvailability/",headers=headers)
+        return Response(response.json())
 
 
 class LeadersView(APIView):
