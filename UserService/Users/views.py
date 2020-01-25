@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import SignupSerializer,LoginSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,LeadPlaceSerializer,SpecificSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from Places.models import Places
@@ -166,22 +166,30 @@ class SpecificUserAPI(generics.ListAPIView):
         data['avatar']=UserServiceURL+serializer2.data['avatar']
         return Response(data,status=status.HTTP_200_OK)
 
-class LeadPlaceAPI(APIView):
-    permission_classes=(IsAuthenticated,)
-    serializer_class =LeadPlaceSerializer
+class LeadPlace(APIView):
+    serializer_class =SpecificSerializer
         
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            try:
-                leader=Leader.objects.get(userID=request.user)
-                place=Places.objects.get(pk=serializer.data['placeID'])
-                place.leader.add(leader)
-                content = {'detail': 'Added place successfuly'}
-                return Response(content, status=status.HTTP_200_OK)
-            except:
-                content = {'detail': 'Failed to add place'}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
+            headers=request.headers
+            data=serializer.data
+
+            response1=requests.get(url=DatabaseServiceURL+"User/GetLeader/",headers=headers).json()
+            response2=requests.get(url=DatabaseServiceURL+"Place/GetPlace/",headers=headers,data=data).json()
+        
+            data={'leader':response1['id'],'place':response2['id']}
+            response=requests.get(url=DatabaseServiceURL+"User/GetPlaceLeader/",headers=headers,data=data)
+            
+            if response.status_code==200:
+                content={'detail':'This leader already leads the place!'}
+                return Response(data=content,status=status.HTTP_400_BAD_REQUEST)
+            
+            else:
+                response=requests.post(url=DatabaseServiceURL+"User/LeadPlace/",headers=headers,data=data)
+                return Response(response.json())
+        
         else:
              return Response(serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
