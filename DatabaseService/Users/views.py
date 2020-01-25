@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from .models import user,Leader
-from .serializers import UserSerializer,LeaderSerializer
+from .serializers import UserSerializer,LeaderSerializer,PlaceSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from DatabaseService.Global_variables import DatabaseServiceURL
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from Places.models import Places
 
 class GetUser(APIView):
     def get(self,request,format=None,*args, **kwargs):
@@ -86,6 +87,22 @@ class AddLeader(APIView):
 
         content = {'detail': 'Successfully added Leader'}
         return Response(content,status=status.HTTP_201_CREATED)
+
+
+class LeadPlace(APIView):
+
+    def post(self,request):
+        
+        data=request.data
+        leaderID=data['leader']
+        placeID=data['place']
+        leader=Leader.objects.get(id=leaderID)
+        place=Places.objects.get(id=placeID)
+    
+        place.leader.add(leader)
+
+        content = {'detail': 'Successfully added place'}
+        return Response(content,status=status.HTTP_200_OK)
  
 
         
