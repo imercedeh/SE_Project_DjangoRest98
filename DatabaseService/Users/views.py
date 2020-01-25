@@ -89,10 +89,27 @@ class AddLeader(APIView):
         return Response(content,status=status.HTTP_201_CREATED)
 
 
+class GetPlaceLeader(APIView):
+
+    def get(self,request):
+        data=request.data
+        leaderID=data['leader']
+        placeID=data['place']
+        leader=Leader.objects.get(id=leaderID)
+        place=Places.objects.get(id=placeID)
+    
+        leaders=place.leader.all()
+        for l in leaders:
+            if(l.id==leader.id):
+                return Response(status=status.HTTP_200_OK) 
+
+        content = {'detail': 'This leader doesnt lead the place'}
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+
+
 class LeadPlace(APIView):
 
     def post(self,request):
-        
         data=request.data
         leaderID=data['leader']
         placeID=data['place']
