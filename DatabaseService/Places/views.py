@@ -6,7 +6,20 @@ from .models import Places
 from  Users.models import user,Leader
 from .serializers import CreatePlaceSerializer,ViewPlaceSerializer,SpecificSerializer,HomePlaces
 from Users.serializers import UserSerializer
+from Users.serializers import PlaceSerializer
 import random
+
+class GetPlace(APIView):
+    def get(self,request):
+        try:
+            id=request.data['objID']
+            place=Places.objects.get(id=id) 
+            data=PlaceSerializer(place).data
+            return Response(data=data,status=status.HTTP_200_OK)
+        except :
+            content = {'detail':
+                        ('place does not exist in db.')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 class AddPlace(APIView):
     def post(self,request):
