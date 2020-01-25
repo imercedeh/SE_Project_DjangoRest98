@@ -120,6 +120,16 @@ class LeadPlace(APIView):
 
         content = {'detail': 'Successfully added place'}
         return Response(content,status=status.HTTP_200_OK)
+
+class ChangeAvailability(APIView):
+
+    def post(self, request, format=None):
+        u=user.objects.get(username=request.user.username)
+        leader=Leader.objects.get(userID=u)
+        leader.is_available=not leader.is_available
+        leader.save()
+        content = {'detail': 'Successfully changed leader avalailability.'}
+        return Response(content,status=status.HTTP_200_OK)
  
 
         
