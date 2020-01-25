@@ -58,6 +58,17 @@ class LeadPlace(APIView):
         return Response(data=resualt.json())
 
 
+class ChangeAvailability(APIView):
+    #permission_classes=(IsAuthenticated,)
+
+    def post(self, request, format=None):
+        url=UserServiceURL+"ChangeAvailability/"
+        headers=request.headers
+        response=requests.post(url=url,headers=headers)
+        print('helllo')
+        return Response(response.json())
+
+
 class CreatePlace(APIView):
     def post(self, request,format=None):
         url=PlaceServiceURL+"CreatePlace/"
