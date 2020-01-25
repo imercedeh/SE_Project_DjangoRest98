@@ -24,6 +24,7 @@ class Signup(APIView):
         response=requests.post(url=url,data=data,files=files)
         return Response(data=response.json())
 
+
 class Login(APIView):
     permission_classes = (AllowAny,)
     def post(self, request):
@@ -43,6 +44,19 @@ class LeaderCreation(APIView):
         header['Authorization']=headers['Authorization']
         resualt=requests.post(url=url,headers=header,data=data)
         return Response(data=resualt.json())
+
+
+class LeadPlace(APIView):
+    #permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        url=UserServiceURL+"LeadPlace/"
+        data=request.data
+        headers=dict(request.headers)
+        header={}
+        header['Authorization']=headers['Authorization']
+        resualt=requests.post(url=url,headers=header,data=data)
+        return Response(data=resualt.json())
+
 
 class CreatePlace(APIView):
     def post(self, request,format=None):

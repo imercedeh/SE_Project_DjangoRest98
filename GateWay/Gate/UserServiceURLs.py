@@ -5,7 +5,7 @@ from rest_framework import routers
 from rest_framework.authtoken import views
 from django.conf import settings
 from django.conf.urls.static import static
-from Gate.views import(Signup,Login,LeaderCreation)
+from Gate.views import(Signup,Login,LeaderCreation,LeadPlace)
 from rest_framework_simplejwt import views as jwt_views
 #router = routers.DefaultRouter()
 
@@ -17,7 +17,7 @@ urlpatterns = [
     # url(r'^me/$', ProfileAPI.as_view()),
     # url(r'SpecificLeader/',SpecificLeaderAPI.as_view()),
     # url(r'SpecificUser/',SpecificUserAPI.as_view()),
-    # url(r'LeadPlace/',LeadPlaceAPI.as_view()),
+     url(r'LeadPlace/',LeadPlace.as_view()),
     # url(r'ChangeAvailability/',ChangeAvailabilityAPI.as_view()),
     # url('LeadersView/',LeadersView.as_view(),name='LeadersView'),
     # url('LeaderSortView/',LeaderSortView.as_view(),name='LeaderSortView'),
