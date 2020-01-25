@@ -43,8 +43,6 @@ class LeaderSerializer(serializers.ModelSerializer):
         model = Leader
         fields = '__all__'
 
-class LeadPlaceSerializer(serializers.Serializer):
-    placeID=serializers.IntegerField()
 
 class SpecificSerializer(serializers.Serializer):
     objID=serializers.IntegerField()
