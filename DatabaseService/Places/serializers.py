@@ -1,7 +1,5 @@
 from rest_framework.serializers import *
 from Places.models import Places
-# from Users.models import user,Leader
-# from Users.serializers import UserSerializer,LeaderSerializer,PlaceLeader
 from rest_framework import serializers
 from django.db.models import Avg
 
@@ -33,12 +31,9 @@ class SpecificSerializer(serializers.Serializer):
 
 
 class ViewPlaceSerializer(ModelSerializer):
-    #pp=uuSerializer(read_only=True)
-    #leader=PlaceLeader(read_only=True)
     image1=SerializerMethodField()
     class Meta:
         model=Places
-        #fields='__all__' 
         fields = [
         'id',
         'title', 
@@ -79,12 +74,12 @@ class ViewPlaceSerializer(ModelSerializer):
         return image
 
 
-# class HomePlaces(ModelSerializer):
-    # class Meta:
-        # model=Places
-        # fields=[
-            # 'id',
-            # 'title',
-            # 'image1',
-            # 'categories'   
-        # ]
+class HomePlaces(ModelSerializer):
+    class Meta:
+        model=Places
+        fields=[
+            'id',
+            'title',
+            'image1',
+            'categories'   
+        ]
