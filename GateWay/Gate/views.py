@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import requests
 from rest_framework.views import APIView
-from GateWay.Global_variables import UserServiceURL,PlaceServiceURL
+from GateWay.Global_variables import UserServiceURL,PlaceServiceURL,TravellougeServiceURL
 import json
 
 class Signup(APIView):
@@ -67,6 +67,28 @@ class ChangeAvailability(APIView):
         response=requests.post(url=url,headers=headers)
         print('helllo')
         return Response(response.json())
+
+class TravelLougeCreation(APIView):
+    #permission_classes=(IsAuthenticated,)
+    def post(self, request,format=None):
+        url=TravellougeServiceURL+"travellouge-creation/"
+        data=request.data
+        headers=dict(request.headers)
+        header={}
+        header['Authorization']=headers['Authorization']
+        files={}
+         
+        if('image1' in request.data):
+            files={'image1':request.data['image1']}
+
+        if('image2' in request.data):
+            files={'image2':request.data['image2']}
+
+        if('image3' in request.data):
+            files={'image3':request.data['image3']}
+
+        response=requests.post(url=url,data=data,files=files,headers=header)
+        return Response(data=response.json())
 
 
 class CreatePlace(APIView):

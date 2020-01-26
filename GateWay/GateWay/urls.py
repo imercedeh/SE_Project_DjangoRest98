@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/User/', include('Gate.UserServiceURLs')),
     path('api/Place/',include('Gate.PlaceServiceURLs')),
+    path('api/Travellouge/',include('Gate.TravellougeServiceURLs')),
 ]
