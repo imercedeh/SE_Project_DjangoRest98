@@ -183,8 +183,8 @@ class SetLeaderFreeTimes(APIView):
     #permission_classes(IsAuthenticated)
 
     def post(self,request,format=None):
-        print(request.data)
-        return Response()
+
+        return Response(request.data)
 
 
 class LeadersView(APIView):
