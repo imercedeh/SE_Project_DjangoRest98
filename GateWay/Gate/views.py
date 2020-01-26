@@ -13,7 +13,7 @@ class Signup(APIView):
         url=UserServiceURL+"sign-up/"
         data=request.data
         files={}
-
+        
         if('avatar' in data):
             pic=data['avatar']
             files={pic.name:pic.file}
@@ -65,7 +65,6 @@ class ChangeAvailability(APIView):
         url=UserServiceURL+"ChangeAvailability/"
         headers=request.headers
         response=requests.post(url=url,headers=headers)
-        print('helllo')
         return Response(response.json())
 
 class TravelLougeCreation(APIView):
@@ -73,22 +72,33 @@ class TravelLougeCreation(APIView):
     def post(self, request,format=None):
         url=TravellougeServiceURL+"travellouge-creation/"
         data=request.data
+        data = json.dumps(data)
         headers=dict(request.headers)
-        header={}
-        header['Authorization']=headers['Authorization']
         files={}
-         
-        if('image1' in request.data):
-            files={'image1':request.data['image1']}
+        # if('image1' in data):
+        #     pic1=data['image1']
+        #     files={pic1.name:pic1.file}
+        #     data['image1']='True'
+        #     data['content_type1']=pic1.content_type
+        #     data['name1']=pic1.name
+       
+        # if('image2' in data):
+        #     pic2=data['image2']
+        #     files={pic2.name:pic2.file}
+        #     data['image2']='True'
+        #     data['content_type2']=pic2.content_type
+        #     data['name2']=pic2.name
+        
+        # if('image3' in data):
+        #     pic3=data['image3']
+        #     files={pic3.name:pic3.file}
+        #     data['image3']='True'
+        #     data['content_type3']=pic3.content_type
+        #     data['name3']=pic3.name    
+            
 
-        if('image2' in request.data):
-            files={'image2':request.data['image2']}
-
-        if('image3' in request.data):
-            files={'image3':request.data['image3']}
-
-        response=requests.post(url=url,data=data,files=files,headers=header)
-        return Response(data=response.json())
+        response=requests.post(url=url,data=data,files=files,headers=headers)
+        return Response(response.json())
 
 
 class CreatePlace(APIView):

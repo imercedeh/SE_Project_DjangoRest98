@@ -46,7 +46,7 @@ class Signup(APIView):
                     data['avatar']='True'
                     data['content_type']=contentType
                     data['name']=name
-
+                    
                 response=requests.post(url=DatabaseServiceURL+"User/AddUser/",data=data,files=files)
                 return Response(response.json())
         else:

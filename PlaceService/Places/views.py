@@ -41,7 +41,7 @@ class CreatePlace(APIView):
             else:
                 files={}
                 data=serializer.data
-
+                
                 if('image1' in request.FILES):
                     files={'image1':request.FILES['image1']}
 
