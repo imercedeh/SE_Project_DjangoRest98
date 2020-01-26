@@ -179,6 +179,13 @@ class ChangeAvailability(APIView):
         leader.save()
         return Response(status=status.HTTP_200_OK)
 
+class SetLeaderFreeTimes(APIView):
+    #permission_classes(IsAuthenticated)
+
+    def post(self,request,format=None):
+        print(request.data)
+        return Response()
+
 
 class LeadersView(APIView):
     def get(self,request,format=None,*args, **kwargs):
