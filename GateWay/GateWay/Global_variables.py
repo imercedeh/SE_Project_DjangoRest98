@@ -1,4 +1,4 @@
-UserServiceURL="http://userservice.pythonanywhere.com/"
-PlaceServiceURL="http://placesservice.pythonanywhere.com/"
-TravellougeServiceURL="http://travellouge.pythonanywhere.com/"
-DatabaseServiceURL="http://iammobina.pythonanywhere.com/"
+UserServiceURL="http://userservice.pythonanywhere.com/api/User/"
+PlaceServiceURL="http://placesservice.pythonanywhere.com/api/Place/"
+TravellougeServiceURL="http://travellouge.pythonanywhere.com/api/Travellouge/"
+DatabaseServiceURL="http://iammobina.pythonanywhere.com/Query/"
