@@ -185,15 +185,19 @@ class SetLeaderFreeTimes(APIView):
     
     def post(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
-        data=serializer.data
-        freetime=TimeOBJ(startime=data['StartTime'],endtime=data['EndTime'])
-        freetime.save()
-        u = user.objects.get(username=request.user.username)
-        leader=Leader.objects.get(userID=u)
+        if serializer.is_valid():
+            data=serializer.data
+            freetime=TimeOBJ(startime=data['StartTime'],endtime=data['EndTime'])
+            freetime.save()
+            u = user.objects.get(username=request.user.username)
+            leader=Leader.objects.get(userID=u)
     
-        leader.freetimes.add(freetime)
-        content = {'detail': 'Set free time successfuly'}
-        return Response(content, status=status.HTTP_201_CREATED) 
+            leader.freetimes.add(freetime)
+            content = {'detail': 'Set free time successfuly'}
+            return Response(content, status=status.HTTP_201_CREATED)
+        else:
+            content = {'detail': 'Failed to set time'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST) 
     
     def get(self,request,format=None):
         
