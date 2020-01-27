@@ -65,3 +65,7 @@ class TimeOBJSeriallizer(serializers.ModelField):
     class Meta:
         model = TimeOBJ
         fields = '__all__'
+
+class SetFreeTimeSerializer(serializers.Serializer):
+    StartTime = serializers.DateTimeField(allow_blank=True)
+    EndTime = serializers.DateTimeField(allow_blank=True)
