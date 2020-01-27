@@ -187,6 +187,7 @@ class SetLeaderFreeTimes(APIView):
         serializer = self.serializer_class(data=request.data)
         data=serializer.data
         freetime=TimeOBJ(startime=data['StartTime'],endtime=data['EndTime'])
+        freetime.save()
         u = user.objects.get(username=request.user.username)
         leader=Leader.objects.get(userID=u)
     
