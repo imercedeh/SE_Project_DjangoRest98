@@ -43,3 +43,10 @@ class TestView(APITestCase):
 
 
 
+
+    def test_get_LeaderList(self):
+        url='http://127.0.0.1:8000/api/User/LeadersView/'
+        response=self.client.get(url)
+        self.assertEqual(response.status_code,200)
+        qs=Leader.objects.filter(id='1')
+        self.assertEqual(qs.count(),0)
