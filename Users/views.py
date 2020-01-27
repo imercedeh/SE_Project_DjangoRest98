@@ -207,9 +207,8 @@ class SetLeaderFreeTimes(APIView):
     def delete(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
         data=serializer.data
-        freetime=TimeOBJ(startime=data['StartTime'],endtime=data['EndTime'])
-        freetime.save()
-        return Response(data, status=status.HTTP_200_OK)   
+        TimeOBJ.objects.get(startime=data['StartTime'],endtime=data['EndTime']).delete()
+        return Response(status=status.HTTP_200_OK)   
 
 def GetLeaderFreeTimes(leader):
     freetimes=leader.freetimes.all()
