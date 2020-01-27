@@ -61,7 +61,7 @@ class RateSerializer(serializers.Serializer):
     LeaderID=serializers.IntegerField()
     rate=serializers.IntegerField()
 
-class TimeOBJSeriallizer(serializers.ModelField):
+class TimeOBJSeriallizer(serializers.ModelSerializer):
     class Meta:
         model = TimeOBJ
         fields = '__all__'

@@ -182,6 +182,7 @@ class ChangeAvailability(APIView):
 class SetLeaderFreeTimes(APIView):
     permission_classes=(IsAuthenticated,)
     serializer_class = SetFreeTimeSerializer
+    serializer_class2 = TimeOBJSeriallizer
     
     def post(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
@@ -191,7 +192,6 @@ class SetLeaderFreeTimes(APIView):
             freetime.save()
             u = user.objects.get(username=request.user.username)
             leader=Leader.objects.get(userID=u)
-    
             leader.freetimes.add(freetime)
             content = {'detail': 'Set free time successfuly'}
             return Response(content, status=status.HTTP_201_CREATED)
@@ -204,23 +204,27 @@ class SetLeaderFreeTimes(APIView):
         u = user.objects.get(username=request.user.username)
         leader=Leader.objects.get(userID=u)
         allfreetimes=GetLeaderFreeTimes(leader)
-        data=TimeOBJSeriallizer(allfreetimes,many=True)
-
+        data=[]
+        for t in allfreetimes:
+            serializer = self.serializer_class2(t)
+            d=serializer.data
+            data.append(d)
+    
         return Response(data, status=status.HTTP_200_OK)    
 
     def delete(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
-        data=serializer.data
-        TimeOBJ.objects.get(startime=data['StartTime'],endtime=data['EndTime']).delete()
-        return Response(status=status.HTTP_200_OK)   
+        if(serializer.is_valid()):
+            data=serializer.data
+            TimeOBJ.objects.get(startime=data['StartTime'],endtime=data['EndTime']).delete()
+            return Response(status=status.HTTP_200_OK) 
+        else:
+            content = {'detail': 'Failed to delete time'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)  
 
 def GetLeaderFreeTimes(leader):
     freetimes=leader.freetimes.all()
-    data=[]
-    for t in freetimes:
-        freetime=TimeOBJSeriallizer(t)
-        data.append(freetime)
-    return data
+    return freetimes
 
 class LeadersView(APIView):
     def get(self,request,format=None,*args, **kwargs):
