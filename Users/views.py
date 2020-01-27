@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer,RateSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer,TimeOBJSeriallizer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
@@ -181,11 +181,28 @@ class ChangeAvailability(APIView):
 
 class SetLeaderFreeTimes(APIView):
     #permission_classes(IsAuthenticated)
-
+    serializer_class = TimeOBJSeriallizer
     def post(self,request,format=None):
+        serializer = self.serializer_class(data=request.data)
+        
+        freetime=serializer.data
+        u = user.objects.get(username=request.user.username)
+        leader=Leader.objects.get(userID=u)
+    
+        leader.freetimes.add(freetime)
 
-        return Response(request.data)
+        allfreetimes=GetLeaderFreeTimes(leader)
+        data=TimeOBJSeriallizer(allfreetimes,many=True)
+        return Response(data, status=status.HTTP_200_OK)      
 
+
+def GetLeaderFreeTimes(leader):
+    freetimes=leader.freetimes.all()
+    data=[]
+    for t in freetimes:
+        freetime=TimeOBJSeriallizer(t)
+        data.append(freetime)
+    return data
 
 class LeadersView(APIView):
     def get(self,request,format=None,*args, **kwargs):
