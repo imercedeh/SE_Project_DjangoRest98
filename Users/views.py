@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import SignupSerializer,UserSerializer,LeaderCreationSerializer,LeaderSerializer,PlaceSerializer,RateSerializer
 from rest_framework.generics import CreateAPIView
-from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer,TimeOBJSeriallizer
+from .serializers import UserSerializer,LeaderCreationSerializer,LeaderSerializer,SpecificSerializer,TimeOBJSeriallizer,SetFreeTimeSerializer
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, FormParser,FileUploadParser
@@ -180,30 +180,28 @@ class ChangeAvailability(APIView):
         return Response(status=status.HTTP_200_OK)
 
 class SetLeaderFreeTimes(APIView):
-    #permission_classes(IsAuthenticated)
-    serializer_class = TimeOBJSeriallizer
+    permission_classes=(IsAuthenticated,)
+    serializer_class = SetFreeTimeSerializer
     
     def post(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
-        
-        freetime=serializer.data
+        data=serializer.data
+        freetime=TimeOBJ(startime=data['StartTime'],endtime=data['EndTime'])
         u = user.objects.get(username=request.user.username)
         leader=Leader.objects.get(userID=u)
     
         leader.freetimes.add(freetime)
-
-        allfreetimes=GetLeaderFreeTimes(leader)
-        data=TimeOBJSeriallizer(allfreetimes,many=True)
-        return Response(data, status=status.HTTP_200_OK) 
+        content = {'detail': 'Set free time successfuly'}
+        return Response(content, status=status.HTTP_201_CREATED) 
     
     def get(self,request,format=None):
         
         u = user.objects.get(username=request.user.username)
         leader=Leader.objects.get(userID=u)
         allfreetimes=GetLeaderFreeTimes(leader)
-        data=TimeOBJ(allfreetimes,many=True)
+        data=TimeOBJSeriallizer(allfreetimes,many=True)
 
-        return Response(data, status=status.HTTP_200_OK)      
+        return Response(data, status=status.HTTP_200_OK)    
 
 
 def GetLeaderFreeTimes(leader):
