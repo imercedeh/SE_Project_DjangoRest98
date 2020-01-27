@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from .models import user,Leader
 from rest_framework import serializers
 from Places.models import Places
+from .models import TimeOBJ
 
 class SignupSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -59,3 +60,8 @@ class PlaceLeader(serializers.ModelSerializer):
 class RateSerializer(serializers.Serializer):
     LeaderID=serializers.IntegerField()
     rate=serializers.IntegerField()
+
+class TimeOBJSeriallizer(serializers.ModelField):
+    class Meta:
+        model = TimeOBJ
+        fields = '__all__'
