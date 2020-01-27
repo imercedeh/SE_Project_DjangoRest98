@@ -7,6 +7,10 @@ class user(User):
     phone_number=models.CharField(max_length=13)
     avatar =models.ImageField(default='/profile/profile.jpg',upload_to='profile')
 
+class TimeOBJ(models.Model):
+    startime=models.DateTimeField(null=True)
+    endtime=models.DateTimeField(null=True)
+
 class Leader(models.Model):
     userID=models.OneToOneField(user,on_delete=models.CASCADE)
     is_available=models.BooleanField(default=False)
@@ -16,6 +20,7 @@ class Leader(models.Model):
     car_model=models.CharField(max_length=20)
     gender=models.BooleanField(default=False)
     age=models.CharField(max_length=3,default=None)
+    freetimes=models.ForeignKey(TimeOBJ,on_delete=models.CASCADE,null=True)
 
 
 class LeaderRate(models.Model):
