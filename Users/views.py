@@ -182,6 +182,7 @@ class ChangeAvailability(APIView):
 class SetLeaderFreeTimes(APIView):
     #permission_classes(IsAuthenticated)
     serializer_class = TimeOBJSeriallizer
+    
     def post(self,request,format=None):
         serializer = self.serializer_class(data=request.data)
         
@@ -193,6 +194,15 @@ class SetLeaderFreeTimes(APIView):
 
         allfreetimes=GetLeaderFreeTimes(leader)
         data=TimeOBJSeriallizer(allfreetimes,many=True)
+        return Response(data, status=status.HTTP_200_OK) 
+    
+    def get(self,request,format=None):
+        
+        u = user.objects.get(username=request.user.username)
+        leader=Leader.objects.get(userID=u)
+        allfreetimes=GetLeaderFreeTimes(leader)
+        data=TimeOBJ(allfreetimes,many=True)
+
         return Response(data, status=status.HTTP_200_OK)      
 
 
