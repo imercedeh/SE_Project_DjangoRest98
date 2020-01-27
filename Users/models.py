@@ -20,7 +20,7 @@ class Leader(models.Model):
     car_model=models.CharField(max_length=20)
     gender=models.BooleanField(default=False)
     age=models.CharField(max_length=3,default=None)
-    freetimes=models.ForeignKey(TimeOBJ,on_delete=models.CASCADE,null=True)
+    freetimes=models.ManyToManyField(TimeOBJ)
 
 
 class LeaderRate(models.Model):
